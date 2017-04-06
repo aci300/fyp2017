@@ -6,15 +6,15 @@ import java.util.Set;
 public interface QuerriesService  {
 
 	
-	public void addNewAcc(String newusername, String password) throws IllegalArgumentException; 
+	public void addNewAcc(String newacc, String password, String desc ,  String hint) throws IllegalArgumentException; 
 	
 	public void changePassword(String username, String newpassword , String confirm) throws IllegalArgumentException; 
 	
-	public Boolean checkUser(String username);
+	public Boolean checkAccount(String username);
 	
-	public Boolean checkPassword(String username, String password); 
+	public Boolean checkHint(String username, String password); 
 	
-	public void deleteUser(String username);
+	public void deleteAccount(String username);
 	
 	public Integer getAccID(String username);
 	

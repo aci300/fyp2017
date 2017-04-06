@@ -63,7 +63,7 @@ public class Encryption {
 	}
 	
 
-    private static String byteArrayToHexString(byte[] data) {
+    public static String byteArrayToHexString(byte[] data) {
 	StringBuffer buf = new StringBuffer();
 	for (int i = 0; i < data.length; i++) {
 	    int halfbyte = (data[i] >>> 4) & 0x0F;

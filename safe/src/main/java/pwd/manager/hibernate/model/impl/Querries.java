@@ -46,9 +46,42 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 		}
 	}
 
-	public void changePassword(String username, String newpassword, String confirm) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		
+	public void changePassword(String accountname, String newpassword, String confirm) throws IllegalArgumentException {
+		Session session = this.getSessionFactory().getCurrentSession();
+		Transaction tx = session.beginTransaction();
+
+		try {
+			if (newpassword.equals(confirm)) {
+
+				if (newpassword.equals("") || newpassword.contains(" ")){
+					throw new IllegalArgumentException("Character (space) not accepted!");
+				}
+
+				else {
+
+					Account acc = (Account) session.createCriteria(AccountImpl.class)
+							.add(Restrictions.eq("accountt", accountname)).uniqueResult();
+
+					acc.setPassword(newpassword);
+					session.update(acc);
+
+					tx.commit();
+
+				}
+			} 
+			else {
+				throw new IllegalArgumentException("Password not properly confirmed");
+			}
+
+		}
+
+		catch (HibernateException e) {
+			e.printStackTrace();
+			if (tx != null) {
+				tx.rollback();
+			}
+		}
+
 	}
 
 	public Boolean checkAccount(String acc) {
@@ -63,6 +96,9 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 			if (newaccount == null){
 				return status;
 			}
+			
+			else 
+				status = true;
 
 		
 		}  catch (HibernateException e) {
@@ -77,29 +113,62 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 		
 	}
 
-	public Boolean checkPassword(String username, String password) {
-		// TODO Auto-generated method stub
-		return null;
+	public Boolean checkHint(String account, String hint) {
+		Session session = this.getSessionFactory().getCurrentSession();
+		Transaction tx = session.beginTransaction();
+	    Boolean status = null; 
+		
+		try {
+			Account useraccount = (Account) session.createCriteria(AccountImpl.class)
+					.add(Restrictions.eq("account", account)).uniqueResult();
+	
+			if(useraccount.getHint().equals(hint)){
+				status= true; 
+			}
+			else {
+				status= false; 
+			}			
+		}  catch (HibernateException e) {
+			e.printStackTrace();
+			if (tx != null) {
+				tx.rollback();
+			}
+		}
+		return status;
 	}
 
-	public void deleteUser(String username) {
-		// TODO Auto-generated method stub
-		
+	public void deleteAccount(String accountname) {
+		Session session = this.getSessionFactory().getCurrentSession();
+		Transaction tx = session.beginTransaction();
+		try {
+			Account useraccount = (Account) session.createCriteria(AccountImpl.class)
+					.add(Restrictions.eq("account", accountname)).uniqueResult();
+			if (useraccount == null){
+				return;
+			}
+			else{
+				session.delete(useraccount);
+			}
+			tx.commit();
+			
+		}  catch (HibernateException e) {
+			e.printStackTrace();
+			if (tx != null) {
+				tx.rollback();
+			}
+		}
 	}
+
 
 	public Integer getAccID(String username) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public void addNewAcc(String newusername, String password) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		
-	}
 
-	public Boolean checkUser(String username) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+
+	
+	
 
 }
