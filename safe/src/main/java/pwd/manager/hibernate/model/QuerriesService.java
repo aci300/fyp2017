@@ -18,4 +18,6 @@ public interface QuerriesService  {
 	
 	public Integer getAccID(String username);
 	
+	public String showPass(String account); 
+	
 }

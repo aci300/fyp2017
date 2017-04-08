@@ -3,6 +3,7 @@ package pwd.manager.safe;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -27,29 +28,56 @@ public class Main {
 		
 		System.out.println(AESKey);
 
-		byte[] encPwd = Encryption.AESencryption(byteKey , "123456");  
+		byte[] encPwd = Encryption.AESencryption(byteKey , "vasileee1993");  
 		
-		String encrypted = Encryption.byteArrayToHexString(encPwd); 
+		String encrypted = Model.toHexString(encPwd); 
 		
+		String sha2 = Model.toHexString(model.SHA256(AESKey))  ;
+		System.out.println("hashed with SHA256 : " + sha2);
 		
+
 		
-	
+		System.out.println(Arrays.equals(Model.toByteArray(sha2), model.SHA256(AESKey)));
+		
+		byte[] hexKey = model.hashSHA(AESKey);
+		
+		System.out.println(AESKey);
+
+	//	byte[] encPwd = Encryption.AESencryption(hexKey , "123456");  
+		
+	//	String encrypted = Encryption.byteArrayToHexString(encPwd); 
+		
+	//	System.out.println(encPwd);
+		
+	/*	String decPwd = Decryption.AESdecryption(hexKey, encrypted); 
+		System.out.println("dec value : " + decPwd);*/
+		
 		
 		String dbCommand = "update"; 
 		ServiceRegistry serviceRegistry = null;
 		
 		serviceRegistry= model.getServiceRegistry(dbCommand); 
 	
+		String passDB = null;
 		
 		SessionFactory factory = null;
 	try {
 		factory = model.createSessionFactory(serviceRegistry);
 		QuerriesService service = new Querries(factory);
-		String user = "alex@gmail.comr";
+		String user = "vasile@gmail.comr";
 		String pass = encrypted;
+
 		try {
 			service.addNewAcc(user, pass , "descr" , "hint1");
 			String message = "Account successfully made";
+			System.out.println(message);
+			//service.changePassword(user, pass, pass);
+		//	String message = null;
+
+			//message = "Pass successfully changed";
+			passDB = service.showPass(user); 
+			message = "Pass successfully taken ";
+
 			System.out.println(message);
 		} catch (IllegalArgumentException e) {
 			String message = e.getMessage();
@@ -66,21 +94,11 @@ public class Main {
 		}
 		
 		
-		
+	String decPwd = Decryption.AESdecryption(hexKey, passDB); 
+	System.out.println("dec value vrom DB : " + decPwd);
 	
 		
-		/*byte[] hexKey = model.hashSHA(AESKey);
 		
-		System.out.println(AESKey);
-
-		byte[] encPwd = Encryption.AESencryption(hexKey , "123456");  
-		
-		String encrypted = Encryption.byteArrayToHexString(encPwd); 
-		
-		//System.out.println(encPwd);
-		
-		String decPwd = Decryption.AESdecryption(hexKey, encPwd); 
-		System.out.println(decPwd);*/
 	}
 	
 	

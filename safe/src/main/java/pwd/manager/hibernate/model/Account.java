@@ -8,6 +8,9 @@ public interface Account {
 	public String getAccount(); 
 	
 	public void setPassword(String password); 
+	
+	public String getPassword(); 
+
 		
 	public Integer getId(); 
 	

@@ -13,17 +13,18 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 
 public class Decryption {
 	
-	public static String AESdecryption(byte[] password, byte[] encrypted) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, NoSuchAlgorithmException {
+	public static String AESdecryption(byte[] password, String encrypted) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, NoSuchAlgorithmException {
 			
 		
 	//byte[] enc = 	hexStringToByteArray(encrypted);
 		
 		  byte[] key=  password;
    	   String s=   byteArrayToHexString(key); 
-   	   System.out.println("Decryption pwd: " + s);
+   	 //  System.out.println("Decryption pwd: " + s);
    	   SecretKeySpec aesKey = new SecretKeySpec(key, "AES");
 	        Cipher c = null;
 			try {
@@ -36,19 +37,23 @@ public class Decryption {
 				e.printStackTrace();
 			}
 	        c.init(Cipher.DECRYPT_MODE, aesKey);
-	        byte[] cipherText = c.doFinal(encrypted);
+	        byte[] enc = toByteArray(encrypted);
+	        byte[] cipherText = c.doFinal(enc);
 			   
 			   // Ciphertext as hex.
 			// String   decryptedValue = byteArrayToHexString(cipherText);
-			//   System.out.println("Cipher text: "+decryptedValue);
+			 //  System.out.println("Cipher text: "+decryptedValue);
 			   
 			   String originalString = new String(cipherText);
-			    System.out.println("Original string: " + originalString);
+			 //   System.out.println("Original string: " + originalString);
 
 	        return originalString;
 	        
 	}
-	
+	@SuppressWarnings("restriction")
+	public static byte[] toByteArray(String s) {
+	    return DatatypeConverter.parseHexBinary(s);
+	}
 
     private static String byteArrayToHexString(byte[] data) {
 	StringBuffer buf = new StringBuffer();

@@ -1,5 +1,6 @@
 package pwd.manager.safe;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.Key;
@@ -9,7 +10,8 @@ import java.util.Arrays;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
-
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;   
 
 
 
@@ -47,10 +49,17 @@ public class Encryption {
 			   // Ciphertext as hex.
 		      printablecipherText = byteArrayToHexString(cipherText);
 			   
+		      //Byte as Base64
+		      String base64 = base64Encode(cipherText);
+		      
 			   System.out.println("Cipher text: "+printablecipherText);
+			   System.out.println("Cipher text as base64 : "+ base64);
 			   
-			   String originalString = new String(cipherText);
-			    System.out.println("Original text: " + originalString);
+			   byte[] backtobyte = base64Decode(base64);
+			   if(Arrays.equals(cipherText, backtobyte)) System.out.println("yaaay");
+			   
+			 /*  String originalString = new String(cipherText);
+			    System.out.println("Original text: " + originalString);*/
 
 		       } catch (Exception e){
 			   System.out.println("doh");
@@ -61,6 +70,8 @@ public class Encryption {
 		
 		return cipherText; 
 	}
+	
+
 	
 
     public static String byteArrayToHexString(byte[] data) {
@@ -79,7 +90,7 @@ public class Encryption {
 	return buf.toString();
     }
  
-   private static byte[] hexStringToByteArray(String s) {
+   public static byte[] hexStringToByteArray(String s) {
 	int len = s.length();
 	byte[] data = new byte[len / 2];
 	for (int i = 0; i < len; i += 2) {
@@ -88,5 +99,19 @@ public class Encryption {
 	}
         return data;
     }
+   
+   
+
+   @SuppressWarnings({ "restriction", "unused" })
+private static String base64Encode(byte[] bytes)
+   {
+       return new BASE64Encoder().encode(bytes);
+   }
+
+   @SuppressWarnings({ "restriction", "unused" })
+private static byte[] base64Decode(String s) throws IOException
+   {
+       return new BASE64Decoder().decodeBuffer(s);
+   }
 
 }

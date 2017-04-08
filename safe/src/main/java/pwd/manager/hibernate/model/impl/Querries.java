@@ -60,7 +60,7 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 				else {
 
 					Account acc = (Account) session.createCriteria(AccountImpl.class)
-							.add(Restrictions.eq("accountt", accountname)).uniqueResult();
+							.add(Restrictions.eq("account", accountname)).uniqueResult();
 
 					acc.setPassword(newpassword);
 					session.update(acc);
@@ -164,6 +164,34 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public String showPass(String account) {
+		// TODO Auto-generated method stub
+		Session session = this.getSessionFactory().getCurrentSession();
+		Transaction tx = session.beginTransaction();
+		String pwd = null; 
+		try {
+			Account useraccount = (Account) session.createCriteria(AccountImpl.class)
+					.add(Restrictions.eq("account", account)).uniqueResult();
+			if (useraccount == null){
+				throw new IllegalArgumentException("This account doesn't exist");
+ 
+			}
+			else{
+			      pwd = useraccount.getPassword();
+			}
+			tx.commit();
+			
+		}  catch (HibernateException e) {
+			e.printStackTrace();
+			if (tx != null) {
+				tx.rollback();
+			}
+		}
+		return pwd;
+	}  
+	
+	
 
 
 	

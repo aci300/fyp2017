@@ -12,6 +12,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Properties;
+import javax.xml.bind.DatatypeConverter;
+
+//import org.apache.commons.codec.binary.Hex;
+
 
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
@@ -148,4 +152,34 @@ public class Model {
        key = Arrays.copyOf(key, 16); // use only first 128 bit
 	    return key;
 	}
+	
+	public byte[] SHA256(String password) throws NoSuchAlgorithmException {
+        // Salt all you want here.
+        MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
+        byte[] digest = sha256.digest(password.getBytes());
+        return digest;
+	}
+	public static String bytesToHex(byte[] bytes) {
+		
+		char[] hexArray = "0123456789ABCDEF".toCharArray();
+
+	    char[] hexChars = new char[bytes.length * 2];
+	    for ( int j = 0; j < bytes.length; j++ ) {
+	        int v = bytes[j] & 0xFF;
+	        hexChars[j * 2] = hexArray[v >>> 4];
+	        hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+	    }
+	    return new String(hexChars);
+	}
+	
+	@SuppressWarnings("restriction")
+	public static String toHexString(byte[] array) {
+	    return DatatypeConverter.printHexBinary(array);
+	}
+
+	@SuppressWarnings("restriction")
+	public static byte[] toByteArray(String s) {
+	    return DatatypeConverter.parseHexBinary(s);
+	}
+	
 }
