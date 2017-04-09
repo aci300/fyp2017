@@ -1,5 +1,7 @@
 package pwd.manager.hibernate.model.impl;
 
+import java.io.Serializable;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -75,26 +77,40 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 			}
 		}
 	}
-	
-	public void addNewAcc(String newacc, String password, String desc ,  String hint) throws IllegalArgumentException {
+		
+	public void addNewAcc(String newacc, String desc ,  String hint, Integer userID) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		Session session = this.getSessionFactory().getCurrentSession();
 		Transaction tx = session.beginTransaction();
 
 		try {
 			
-			AccountImpl newaccount = new AccountImpl(); 
-			newaccount.setAccount(newacc);
-			
-			newaccount.setPassword(password);
-			
-			newaccount.setDescription(desc);
-			
-			
-			newaccount.setHint(hint);
-			session.save(newaccount);
+			Account acc = (Account) session.createCriteria(AccountImpl.class)
+					.add(Restrictions.eq("account", newacc)).add(Restrictions.eq("user_id", userID)).uniqueResult();
+      
+			if (acc == null )
+			{
+				User user = (User) session.createCriteria(UserImpl.class)
+						.add(Restrictions.eq("id", userID)).uniqueResult();
+				
+				
+				Account newaccount = new AccountImpl(); 
+				newaccount.setAccount(newacc);
+				
+				//newaccount.setPassword(password);
+				
+				newaccount.setDescription(desc);
+				newaccount.setHint(hint);
+				newaccount.setUser(user);
+				session.save(newaccount);
 
-			tx.commit();
+				tx.commit();
+			}
+			else 
+				throw new IllegalArgumentException("This account already exists. Choose a different name for the acc!");
+
+			
+			
 		}
 		catch (HibernateException e) {
 			e.printStackTrace();
@@ -103,8 +119,109 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 			}
 		}
 	}
+	
+	public Integer lastAccID(String account, String username)
+	{
+		
+		Session session = this.getSessionFactory().getCurrentSession();
+		Transaction tx = session.beginTransaction();
+		Integer result = -1; 
+		try {
+	
+			User user = (User) session.createCriteria(UserImpl.class)
+					.add(Restrictions.eq("username", username)).uniqueResult();
+			Integer userID = user.getId(); 
+			
+			Account acc = (Account) session.createCriteria(AccountImpl.class)
+					.add(Restrictions.eq("account", account)).add(Restrictions.eq("user_id", userID)).uniqueResult();
+        	
+		  Serializable ser = session.save(acc);
+	        if (ser != null) {
+	            result = (Integer) ser;
+	            
+	        	tx.commit(); }
+			}
+			catch (HibernateException e) {
+				e.printStackTrace();
+				if (tx != null) {
+					tx.rollback();
+				}
+			
+			}
+		return result; 
+		
+	}
+	
+	public void addAccPassword(String accountID, String newpassword) throws IllegalArgumentException {
+		Session session = this.getSessionFactory().getCurrentSession();
+		Transaction tx = session.beginTransaction();
 
-	public void changePassword(String accountname, String newpassword, String confirm) throws IllegalArgumentException {
+		try {
+			
+
+				if (newpassword.equals("") || newpassword.contains(" ")){
+					throw new IllegalArgumentException("Character (space) not accepted!");
+				}
+
+				else {
+
+					Account acc = (Account) session.createCriteria(AccountImpl.class)
+							.add(Restrictions.eq("id", accountID)).uniqueResult();
+
+					acc.setPassword(newpassword);
+					session.update(acc);
+
+					tx.commit();
+
+				}
+			
+
+		}
+
+		catch (HibernateException e) {
+			e.printStackTrace();
+			if (tx != null) {
+				tx.rollback();
+			}
+		}
+
+	}
+
+	public void changeUserPassword(String username, String newpassword, String confirm) throws IllegalArgumentException {
+		Session session = this.getSessionFactory().getCurrentSession();
+		Transaction tx = session.beginTransaction();
+		try {
+			
+			if (newpassword.equals(confirm)){
+				
+				
+				if (newpassword.equals("") || newpassword.contains(" ")){
+					throw new IllegalArgumentException("Character (space) not accepted!");
+				}
+				
+				User useraccount = (User) session.createCriteria(UserImpl.class)
+						.add(Restrictions.eq("username", username)).uniqueResult();
+				
+					useraccount.setPassword(newpassword);
+					session.update(useraccount);
+					tx.commit();
+			}
+			
+			else {
+				throw new IllegalArgumentException("Password not properly confirmed");
+			}	
+			
+		}  catch (HibernateException e) {
+			e.printStackTrace();
+			if (tx != null) {
+				tx.rollback();
+			}
+		}
+		
+		
+	}
+	
+	public void changeAccPassword(String accountname, String newpassword, String confirm) throws IllegalArgumentException {
 		Session session = this.getSessionFactory().getCurrentSession();
 		Transaction tx = session.beginTransaction();
 
@@ -173,7 +290,6 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 		
 	}
 
-	
 	public Boolean checkAccount(String acc) {
 		Session session = this.getSessionFactory().getCurrentSession();
 		Transaction tx = session.beginTransaction();
@@ -249,7 +365,6 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 		}
 	}
 
-
 	public Integer getAccID(String username) {
 		// TODO Auto-generated method stub
 		return null;
@@ -279,7 +394,14 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 			}
 		}
 		return pwd;
-	}  
+	}
+
+
+
+
+	
+		
+}  
 	
 	
 
@@ -289,4 +411,4 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 	
 	
 
-}
+
