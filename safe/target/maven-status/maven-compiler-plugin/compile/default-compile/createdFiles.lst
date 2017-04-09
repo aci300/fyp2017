@@ -1,1 +1,14 @@
+pwd\manager\hibernate\model\impl\UserImpl.class
 pwd\manager\safe\App.class
+pwd\manager\hibernate\model\impl\AccountImpl.class
+pwd\manager\safe\Crypto.class
+pwd\manager\hibernate\model\User.class
+pwd\manager\hibernate\model\HibernateService.class
+pwd\manager\safe\Decryption.class
+pwd\manager\hibernate\model\impl\Querries.class
+pwd\manager\safe\Main.class
+pwd\manager\safe\Model.class
+pwd\manager\hibernate\model\Account.class
+pwd\manager\hibernate\model\impl\HibernateServiceImpl.class
+pwd\manager\hibernate\model\QuerriesService.class
+pwd\manager\safe\Encryption.class

@@ -53,10 +53,10 @@ public class Encryption {
 		      String base64 = base64Encode(cipherText);
 		      
 			   System.out.println("Cipher text: "+printablecipherText);
-			   System.out.println("Cipher text as base64 : "+ base64);
+			  // System.out.println("Cipher text as base64 : "+ base64);
 			   
-			   byte[] backtobyte = base64Decode(base64);
-			   if(Arrays.equals(cipherText, backtobyte)) System.out.println("yaaay");
+			//   byte[] backtobyte = base64Decode(base64);
+			//   if(Arrays.equals(cipherText, backtobyte)) System.out.println("yaaay");
 			   
 			 /*  String originalString = new String(cipherText);
 			    System.out.println("Original text: " + originalString);*/

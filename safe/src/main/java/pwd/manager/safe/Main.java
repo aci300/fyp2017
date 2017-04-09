@@ -11,6 +11,8 @@ import javax.crypto.IllegalBlockSizeException;
 import org.hibernate.SessionFactory;
 import org.hibernate.service.ServiceRegistry;
 
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import pwd.manager.hibernate.model.QuerriesService;
 import pwd.manager.hibernate.model.impl.Querries;
 
@@ -23,25 +25,30 @@ public class Main {
 		
 		Model model = new Model();
 		
+		/*Argon2 argon2 = Argon2Factory.create();
+		String hash = argon2.hash(10, 65536, 2, "Hello");
+		System.out.println(hash);*/
+		
 		String AESKey = "alex123"; 
-		byte[] byteKey = model.hashSHA(AESKey);
+		byte[] byteKey = model.SHA256(AESKey);
+				//model.hashSHA(AESKey);
 		
 		System.out.println(AESKey);
 
-		byte[] encPwd = Encryption.AESencryption(byteKey , "vasileee1993");  
+		byte[] encPwd = Encryption.AESencryption(byteKey , "vasile1993");  
 		
 		String encrypted = Model.toHexString(encPwd); 
 		
-		String sha2 = Model.toHexString(model.SHA256(AESKey))  ;
+		String sha2 = Model.toHexString(byteKey)  ;
 		System.out.println("hashed with SHA256 : " + sha2);
 		
 
 		
-		System.out.println(Arrays.equals(Model.toByteArray(sha2), model.SHA256(AESKey)));
+		System.out.println(Arrays.equals(Model.toByteArray(encrypted), encPwd));
 		
-		byte[] hexKey = model.hashSHA(AESKey);
+	//	byte[] hexKey = model.hashSHA(AESKey);
 		
-		System.out.println(AESKey);
+	//	System.out.println(AESKey);
 
 	//	byte[] encPwd = Encryption.AESencryption(hexKey , "123456");  
 		
@@ -64,19 +71,19 @@ public class Main {
 	try {
 		factory = model.createSessionFactory(serviceRegistry);
 		QuerriesService service = new Querries(factory);
-		String user = "vasile@gmail.comr";
+		String user = "vasileioionita@gmail.com";
 		String pass = encrypted;
 
 		try {
-			service.addNewAcc(user, pass , "descr" , "hint1");
+			/*service.addNewAcc(user, pass , "descr" , "hint1");
 			String message = "Account successfully made";
-			System.out.println(message);
+			System.out.println(message);*/
 			//service.changePassword(user, pass, pass);
 		//	String message = null;
 
 			//message = "Pass successfully changed";
 			passDB = service.showPass(user); 
-			message = "Pass successfully taken ";
+			String message = "Pass successfully taken ";
 
 			System.out.println(message);
 		} catch (IllegalArgumentException e) {
@@ -94,7 +101,7 @@ public class Main {
 		}
 		
 		
-	String decPwd = Decryption.AESdecryption(hexKey, passDB); 
+	String decPwd = Decryption.AESdecryption(byteKey, passDB); 
 	System.out.println("dec value vrom DB : " + decPwd);
 	
 		

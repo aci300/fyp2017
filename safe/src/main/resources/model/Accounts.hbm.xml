@@ -13,11 +13,7 @@
 		<property name="password" column="password" type="string" unique="false" />
 		<property name="description" column="description" type="string" unique="false" />
 		<property name="hint" column="hint" type="string" unique="false" />
-		
-		
-		
-		
-		
+			
 
 	</class>
 </hibernate-mapping>
