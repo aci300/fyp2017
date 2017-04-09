@@ -1,8 +1,12 @@
 package pwd.manager.hibernate.model.impl;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -289,6 +293,33 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 		
 		
 	}
+	
+	public Boolean checkUserPass(String username, String pass) {
+		Session session = this.getSessionFactory().getCurrentSession();
+		Transaction tx = session.beginTransaction();
+	    Boolean status = false ; 
+		try {
+			
+			User user = (User) session.createCriteria(UserImpl.class)
+					.add(Restrictions.eq("username", username)).uniqueResult();
+	
+			if (user == null){
+				 throw new IllegalArgumentException("User doesn't exist!");
+			}
+
+			if(user.getPassword().equals(pass))
+				status=true; 
+		}  catch (HibernateException e) {
+			e.printStackTrace();
+			if (tx != null) {
+				tx.rollback();
+			}
+		}
+		
+		return status; 
+		
+		
+	}
 
 	public Boolean checkAccount(String acc) {
 		Session session = this.getSessionFactory().getCurrentSession();
@@ -397,6 +428,36 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 	}
 
 
+	public Set<Account> getAllAccounts() {
+		Session session = this.getSessionFactory().getCurrentSession();
+		Transaction tx = session.beginTransaction();
+		
+		try {
+			Criteria crit = session.createCriteria(AccountImpl.class);
+			ScrollableResults items = crit.scroll();
+			
+			Set<Account> accounts = new HashSet<Account>();
+			int count=0;
+            while ( items.next() ) {
+                Account account = (Account) items.get(0);
+                accounts.add(account);
+                count++;
+            }
+
+			return accounts;
+			
+		
+			
+			
+		}  catch (HibernateException e) {
+			e.printStackTrace();
+			if (tx != null) {
+				tx.rollback();
+			}
+		}
+		
+		return null; 
+	}
 
 
 	

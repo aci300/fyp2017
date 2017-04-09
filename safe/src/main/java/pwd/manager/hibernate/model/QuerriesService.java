@@ -31,5 +31,6 @@ public interface QuerriesService  {
 	public Integer lastAccID(String account, String username);
 	
 	public String showPass(String account); 
+	public Boolean checkUserPass(String username, String pass); 
 	
 }
