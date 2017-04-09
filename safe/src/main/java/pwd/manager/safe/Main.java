@@ -34,33 +34,13 @@ public class Main {
 				//model.hashSHA(AESKey);
 		
 		System.out.println(AESKey);
-
-		byte[] encPwd = Encryption.AESencryption(byteKey , "vasile1993");  
+		String SHA256Pass = Model.toHexString(byteKey); 
 		
-		String encrypted = Model.toHexString(encPwd); 
+		String encPwd = Encryption.AESencryption(SHA256Pass , "vasile1231993");  
 		
-		String sha2 = Model.toHexString(byteKey)  ;
-		System.out.println("hashed with SHA256 : " + sha2);
+		System.out.println("hashed with SHA256 : " + SHA256Pass);
 		
-
-		
-		System.out.println(Arrays.equals(Model.toByteArray(encrypted), encPwd));
-		
-	//	byte[] hexKey = model.hashSHA(AESKey);
-		
-	//	System.out.println(AESKey);
-
-	//	byte[] encPwd = Encryption.AESencryption(hexKey , "123456");  
-		
-	//	String encrypted = Encryption.byteArrayToHexString(encPwd); 
-		
-	//	System.out.println(encPwd);
-		
-	/*	String decPwd = Decryption.AESdecryption(hexKey, encrypted); 
-		System.out.println("dec value : " + decPwd);*/
-		
-		
-		String dbCommand = "update"; 
+		String dbCommand = "create"; 
 		ServiceRegistry serviceRegistry = null;
 		
 		serviceRegistry= model.getServiceRegistry(dbCommand); 
@@ -70,22 +50,22 @@ public class Main {
 		SessionFactory factory = null;
 	try {
 		factory = model.createSessionFactory(serviceRegistry);
-		QuerriesService service = new Querries(factory);
-		String user = "vasileioionita@gmail.com";
-		String pass = encrypted;
+		//QuerriesService service = new Querries(factory);
+		/*String user = "vasileioionita2@gmail.com";
+		String pass = encPwd;*/
 
 		try {
-			/*service.addNewAcc(user, pass , "descr" , "hint1");
+			/*service.addNewAcc(user, pass , "descr2" , "hint2");
 			String message = "Account successfully made";
-			System.out.println(message);*/
+			System.out.println(message);
 			//service.changePassword(user, pass, pass);
 		//	String message = null;
 
 			//message = "Pass successfully changed";
 			passDB = service.showPass(user); 
-			String message = "Pass successfully taken ";
+			 message = "Pass successfully taken ";
 
-			System.out.println(message);
+			System.out.println(message);*/
 		} catch (IllegalArgumentException e) {
 			String message = e.getMessage();
 			System.out.println(message);
@@ -100,10 +80,10 @@ public class Main {
 			}
 		}
 		
-		
-	String decPwd = Decryption.AESdecryption(byteKey, passDB); 
+	/*	
+	String decPwd = Decryption.AESdecryption(SHA256Pass, passDB); 
 	System.out.println("dec value vrom DB : " + decPwd);
-	
+	*/
 		
 		
 	}

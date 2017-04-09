@@ -9,8 +9,15 @@
 			<generator class="native" />
 		</id>  
 		
-		<property name="user" column="user" type="string" unique="true" />
+		<property name="username" column="username" type="string" unique="true" />
 		<property name="password" column="password" type="string" unique="false" />	
-
+		
+		<set name="accounts" lazy ="false" > 
+			<key column="user_id" />
+			<one-to-many class="AccountImpl" />
+		</set>
+		
+		
+		
 	</class>
 </hibernate-mapping>

@@ -8,6 +8,7 @@ import org.hibernate.criterion.Restrictions;
 
 import pwd.manager.hibernate.model.HibernateService;
 import pwd.manager.hibernate.model.Account;
+import pwd.manager.hibernate.model.User; 
 import pwd.manager.hibernate.model.impl.AccountImpl;
 import pwd.manager.hibernate.model.QuerriesService;
 
@@ -18,6 +19,63 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 		super(sessionFactory);
 	}
 
+	
+	public void addNewUser(String newusername, String password) throws IllegalArgumentException {
+		Session session = this.getSessionFactory().getCurrentSession();
+		Transaction tx = session.beginTransaction();
+
+		try {
+			
+			
+			if(checkUser(newusername)){ 
+				throw new IllegalArgumentException("That username already  exists in the database");
+			}
+			
+			if(newusername.equals("") || password.equals("")
+					 || newusername.contains(" ") || password.contains(" ") ){
+				throw new IllegalArgumentException("Character not accepted!");
+			}
+			else {
+				User newuser = new UserImpl(); 
+				newuser.setUsername(newusername);
+				
+				newuser.setPassword(password);
+				session.save(newuser);
+
+				tx.commit();
+				
+			}
+		}
+		catch (HibernateException e) {
+			e.printStackTrace();
+			if (tx != null) {
+				tx.rollback();
+			}
+		}
+	}
+	
+	public void deleteUser(String username){
+		Session session = this.getSessionFactory().getCurrentSession();
+		Transaction tx = session.beginTransaction();
+		try {
+			User useraccount = (User) session.createCriteria(UserImpl.class)
+					.add(Restrictions.eq("username", username)).uniqueResult();
+			if (useraccount == null){
+				return;
+			}
+			else{
+				session.delete(useraccount);
+			}
+			tx.commit();
+			
+		}  catch (HibernateException e) {
+			e.printStackTrace();
+			if (tx != null) {
+				tx.rollback();
+			}
+		}
+	}
+	
 	public void addNewAcc(String newacc, String password, String desc ,  String hint) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		Session session = this.getSessionFactory().getCurrentSession();
@@ -84,6 +142,38 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 
 	}
 
+	public Boolean checkUser(String username) {
+		Session session = this.getSessionFactory().getCurrentSession();
+		Transaction tx = session.beginTransaction();
+	    Boolean status = false ; 
+		try {
+			
+			User newaccount = (User) session.createCriteria(UserImpl.class)
+					.add(Restrictions.eq("username", username)).uniqueResult();
+	
+			if (newaccount == null){
+				return status;
+			}
+
+			if(username.equals("") ||  username.contains(" ") ){ 
+				 throw new IllegalArgumentException("Character not accepted!");
+			}	
+			else {
+				status =  true; 
+			}
+		}  catch (HibernateException e) {
+			e.printStackTrace();
+			if (tx != null) {
+				tx.rollback();
+			}
+		}
+		
+		return status; 
+		
+		
+	}
+
+	
 	public Boolean checkAccount(String acc) {
 		Session session = this.getSessionFactory().getCurrentSession();
 		Transaction tx = session.beginTransaction();

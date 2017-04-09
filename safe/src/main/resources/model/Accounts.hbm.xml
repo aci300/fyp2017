@@ -9,11 +9,14 @@
 			<generator class="native" />
 		</id>  
 		
-		<property name="account" column="account" type="string" unique="true" />
+		<property name="account" column="account" type="string" unique="false" />
 		<property name="password" column="password" type="string" unique="false" />
 		<property name="description" column="description" type="string" unique="false" />
 		<property name="hint" column="hint" type="string" unique="false" />
-			
+		  
+		<many-to-one name="user" class="UserImpl"  column="user_id" />
+		  	
+
 
 	</class>
 </hibernate-mapping>

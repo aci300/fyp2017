@@ -10,6 +10,8 @@ import java.util.Arrays;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
+
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;   
 
@@ -18,7 +20,7 @@ import sun.misc.BASE64Encoder;
 public class Encryption {
 
 	
-	public static byte[] AESencryption(byte[] password , String plainText){
+	public static String AESencryption(String password , String plainText){
 		
 			
 		 byte[] cipherText = null; 
@@ -28,8 +30,9 @@ public class Encryption {
 			 
 		    	   
 		  
-		            
-		    	   byte[] key=  password;
+		 		  byte[] key=   hexStringToByteArray(password);
+
+		    	  
 		    	   String s=   byteArrayToHexString(key); 
 		    	   SecretKeySpec aesKey = new SecretKeySpec(key, "AES");
 		    	   
@@ -50,13 +53,13 @@ public class Encryption {
 		      printablecipherText = byteArrayToHexString(cipherText);
 			   
 		      //Byte as Base64
-		      String base64 = base64Encode(cipherText);
+		     // String base64 = base64Encode(cipherText);
 		      
 			   System.out.println("Cipher text: "+printablecipherText);
 			  // System.out.println("Cipher text as base64 : "+ base64);
 			   
-			//   byte[] backtobyte = base64Decode(base64);
-			//   if(Arrays.equals(cipherText, backtobyte)) System.out.println("yaaay");
+			 byte[] backtobyte = hexStringToByteArray(printablecipherText);
+			  if(Arrays.equals(cipherText, backtobyte)) System.out.println("yaaay12345");
 			   
 			 /*  String originalString = new String(cipherText);
 			    System.out.println("Original text: " + originalString);*/
@@ -68,7 +71,7 @@ public class Encryption {
 
 		
 		
-		return cipherText; 
+		return printablecipherText; 
 	}
 	
 
@@ -100,7 +103,15 @@ public class Encryption {
         return data;
     }
    
-   
+	@SuppressWarnings("restriction")
+	public static String toHexString(byte[] array) {
+	    return DatatypeConverter.printHexBinary(array);
+	}
+
+	@SuppressWarnings("restriction")
+	public static byte[] toByteArray(String s) {
+	    return DatatypeConverter.parseHexBinary(s);
+	}
 
    @SuppressWarnings({ "restriction", "unused" })
 private static String base64Encode(byte[] bytes)

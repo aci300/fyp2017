@@ -25,7 +25,9 @@
         <property name="hibernate.current_session_context_class">thread</property>
 
         <!-- All our Hibernate mapping XML files. -->
+         <mapping resource="model/Users.hbm.xml" />
      	 <mapping resource="model/Accounts.hbm.xml" />
+     	
      	
              
     </session-factory>

@@ -11,7 +11,6 @@ public interface Account {
 	
 	public String getPassword(); 
 
-		
 	public Integer getId(); 
 	
 	public void setId(Integer id); 
@@ -23,5 +22,9 @@ public interface Account {
 	public void setHint(String password);
 	
 	public String getHint(); 
+	
+	public void setUser(User user); 
+	
+	public User getUser(); 
 
 }

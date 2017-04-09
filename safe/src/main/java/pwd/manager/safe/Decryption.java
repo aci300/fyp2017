@@ -17,13 +17,13 @@ import javax.xml.bind.DatatypeConverter;
 
 public class Decryption {
 	
-	public static String AESdecryption(byte[] password, String encrypted) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, NoSuchAlgorithmException {
+	public static String AESdecryption(String password, String encrypted) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, NoSuchAlgorithmException {
 			
 		
 	//byte[] enc = 	hexStringToByteArray(encrypted);
 		
-		  byte[] key=  password;
-   	   String s=   byteArrayToHexString(key); 
+		  byte[] key=   hexStringToByteArray(password);
+   	 //  String s=   byteArrayToHexString(key); 
    	 //  System.out.println("Decryption pwd: " + s);
    	   SecretKeySpec aesKey = new SecretKeySpec(key, "AES");
 	        Cipher c = null;
@@ -51,10 +51,14 @@ public class Decryption {
 	        
 	}
 	@SuppressWarnings("restriction")
+	public static String toHexString(byte[] array) {
+	    return DatatypeConverter.printHexBinary(array);
+	}
+
+	@SuppressWarnings("restriction")
 	public static byte[] toByteArray(String s) {
 	    return DatatypeConverter.parseHexBinary(s);
 	}
-
     private static String byteArrayToHexString(byte[] data) {
 	StringBuffer buf = new StringBuffer();
 	for (int i = 0; i < data.length; i++) {

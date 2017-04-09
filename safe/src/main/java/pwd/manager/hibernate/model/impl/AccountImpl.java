@@ -2,6 +2,7 @@ package pwd.manager.hibernate.model.impl;
 
 
 import pwd.manager.hibernate.model.Account;
+import pwd.manager.hibernate.model.User;
 
 
 
@@ -14,6 +15,7 @@ public class AccountImpl implements Account {
 	private Integer id;
 	private String descr; 
 	private String hint; 
+	private User user; 
 	
 	public void setAccount(String account) {
 		this.acc = account; 
@@ -60,6 +62,16 @@ public class AccountImpl implements Account {
 	public String getHint() {
 		// TODO Auto-generated method stub
 		return this.hint;
+	}
+
+	public void setUser(User user) {
+		// TODO Auto-generated method stub
+		this.user = user; 
+	}
+
+	public User getUser() {
+		// TODO Auto-generated method stub
+		return this.user;
 	}
 
 }
