@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,6 +13,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Properties;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 //import org.apache.commons.codec.binary.Hex;
@@ -35,6 +39,7 @@ public class Model {
     private String password; 
     private String title;
     private String description; 
+    private static String salt = "MyPasswordSafeManagerasmyfinalyearProject2017"; 
 
     /**
      * Constructor
@@ -159,6 +164,17 @@ public class Model {
         byte[] digest = sha256.digest(password.getBytes());
         return digest;
 	}
+	
+	
+	 public static String hashPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
+		
+		    PBEKeySpec spec = new PBEKeySpec(password.toCharArray(),salt.getBytes(),100000,256);
+		    SecretKeyFactory key = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+		    byte[] hashedPassword = key.generateSecret(spec).getEncoded();
+		    return String.format("%x", new BigInteger(hashedPassword));
+		  }
+	 
+	 
 	public static String bytesToHex(byte[] bytes) {
 		
 		char[] hexArray = "0123456789ABCDEF".toCharArray();

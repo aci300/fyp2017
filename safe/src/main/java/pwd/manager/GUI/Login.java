@@ -10,6 +10,7 @@ import javax.swing.JPasswordField;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 import javax.swing.JButton;
 import javax.swing.JTextArea;
@@ -83,7 +84,7 @@ public class Login {
 		frame.getContentPane().setLayout(null);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 104, 247, 304);
+		scrollPane.setBounds(0, 154, 247, 304);
 		frame.getContentPane().add(scrollPane);
 		accountsList = new JList<String>();
 		scrollPane.setViewportView(accountsList);
@@ -159,6 +160,9 @@ public class Login {
 				} catch (NoSuchAlgorithmException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				} catch (InvalidKeySpecException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 
 			}
@@ -223,6 +227,9 @@ public class Login {
 					textBox.setText("Invalid or missing credentials!!! ");
 
 				} catch (NoSuchAlgorithmException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvalidKeySpecException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -331,7 +338,7 @@ public class Login {
 					// DefaultListModel<String>();
 					
 				
-					textBox.setText("Select one subject to get the content");
+					textBox.setText("Select one account to get the content");
 					accountsList.setListData(user.getAccounts(usrlogin));
 					
 				}catch (IllegalArgumentException e) {

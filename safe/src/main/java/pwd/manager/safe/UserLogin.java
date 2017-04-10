@@ -1,6 +1,7 @@
 package pwd.manager.safe;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Vector;
 
 import org.hibernate.SessionFactory;
@@ -21,7 +22,7 @@ public class UserLogin
 	private String currPass= null; 
 
 	
-	public void login(String username, String pass) throws NoSuchAlgorithmException{
+	public void login(String username, String pass) throws NoSuchAlgorithmException, InvalidKeySpecException{
 		
 		model = new Model();
 		 dbCommand = "update"; 
@@ -32,7 +33,7 @@ public class UserLogin
 			factory = model.createSessionFactory(serviceRegistry);
 			QuerriesService service = new Querries(factory);
 		//	String user = "vasileioionita2@gmail.com";
-			String hashPass = Model.toHexString(model.SHA256(pass));
+			String hashPass = Model.hashPassword(pass);
 			System.out.println(hashPass);
 			try {
 					if (service.checkUserPass(username, hashPass))
@@ -55,7 +56,7 @@ public class UserLogin
 			
 	}
 	
-	public void createUser(String username, String pass) throws NoSuchAlgorithmException{
+	public void createUser(String username, String pass) throws NoSuchAlgorithmException, InvalidKeySpecException{
 		
 		model = new Model();
 		 dbCommand = "update"; 
@@ -66,7 +67,7 @@ public class UserLogin
 			factory = model.createSessionFactory(serviceRegistry);
 			QuerriesService service = new Querries(factory);
 		//	String user = "vasileioionita2@gmail.com";
-			String hashPass = Model.toHexString(model.SHA256(pass));	
+			String hashPass = Model.hashPassword(pass);	
 			try {
 					service.addNewUser(username, hashPass);
 						
@@ -113,11 +114,13 @@ public class UserLogin
 					{
 						IV = IV + "0"; 
 					}
-					newpassword = Encryption.AESencryption2(userpass, IV, pass);
+					String hashPass = Model.hashPassword(userpass+IV);	
+					newpassword = Encryption.AESencryption(hashPass, pass);
+					//Encryption.AESencryption2(userpass, IV, pass);
 					System.out.println("Sefuuuule");
 					service.addAccPassword(lastID, newpassword);	
 					String message = "Successfully created user";
-					System.out.println(Decryption.AESdecryption2(userpass, IV, newpassword));
+					System.out.println(Decryption.AESdecryption(hashPass, newpassword));
 					System.out.println(message);
 			} catch (IllegalArgumentException e) {
 				String message = e.getMessage();
