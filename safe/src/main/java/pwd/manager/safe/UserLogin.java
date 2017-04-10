@@ -2,11 +2,14 @@ package pwd.manager.safe;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.service.ServiceRegistry;
 
+import pwd.manager.hibernate.model.Account;
 import pwd.manager.hibernate.model.QuerriesService;
 import pwd.manager.hibernate.model.impl.Querries;
 
@@ -20,6 +23,7 @@ public class UserLogin
 	private String dbCommand = "update";
 	private ServiceRegistry serviceRegistry = null;
 	private String currPass= null; 
+	private String currUser = null; 
 
 	
 	public void login(String username, String pass) throws NoSuchAlgorithmException, InvalidKeySpecException{
@@ -38,6 +42,7 @@ public class UserLogin
 			try {
 					if (service.checkUserPass(username, hashPass))
 					{	currPass = pass; 
+						currUser = username; 
 					String message = "Successfully loged in";  
 					System.out.println(message);}
 					else throw new IllegalArgumentException("Incorrect password!");
@@ -137,6 +142,67 @@ public class UserLogin
 			}
 			
 	}
+	
+	
+	public String displayDecryptedPassbyIndex(int index){
+		
+		String username= currUser; 
+		String decPwd = null;
+		String account=null; 
+		int count=0; 
+		Set<Account> accounts = new HashSet<Account>();
+			
+		model = new Model();
+		 dbCommand = "update"; 
+		 
+		serviceRegistry= model.getServiceRegistry(dbCommand); 
+		SessionFactory factory = null;
+		try {
+			factory = model.createSessionFactory(serviceRegistry);
+			QuerriesService service = new Querries(factory);
+	
+			
+			try {
+				
+		
+				accounts = service.AllAccounts(username);
+			
+		
+		
+				
+				for(Account  acc: accounts) 
+				{
+					if( count == index )
+						account = acc.getAccount() ; 
+        
+					count++; 
+        		}
+				decPwd = showAccPass(account, currUser); 
+				
+
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(e);
+			
+		} catch (Exception e){
+			String message = e.getMessage();
+			System.out.println(message);
+		}
+	
+	} finally {
+		if(factory != null && !factory.isClosed()) {
+			factory.close();
+			}
+		}
+		 
+          
+       
+
+		
+		
+		return decPwd; 
+		
+	}
+	
 	
 	public Vector<String> getAccounts(String username){
 		Vector<String> accounts = new Vector<String>();

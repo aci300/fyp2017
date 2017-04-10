@@ -13,6 +13,8 @@ public interface QuerriesService  {
 	
 	public void changeUserPassword(String username, String newpassword, String confirm) throws IllegalArgumentException;
 	
+	public Set<Account> AllAccounts(String username);
+
 	public void addAccPassword(Integer accountID, String newpassword) ;
 	
 	public void changeAccPassword(String username, String newpassword , String confirm) throws IllegalArgumentException; 

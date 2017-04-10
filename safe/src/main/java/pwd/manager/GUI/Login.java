@@ -88,20 +88,13 @@ public class Login {
 		frame.getContentPane().add(scrollPane);
 		accountsList = new JList<String>();
 		scrollPane.setViewportView(accountsList);
-	/*	accountsList.addListSelectionListener(new ListSelectionListener() {
+		accountsList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
-				try {
-					if (subjectsList.getSelectedIndex() >= 0)
-						textBox.setText(mc.displayEmailContent(subjectsList
-								.getSelectedIndex()));
-					listFlags.setListData(mc.getFlags());
-				} catch (MessagingException e) {
-					System.out.println("Invalid or missing credentials!!");
-				} catch (IOException e) {
-					textBox.setText("Invalid or missing credentials!! ");
-				}
+				if (accountsList.getSelectedIndex() >= 0)
+					textBox.setText( user.displayDecryptedPassbyIndex(accountsList
+							.getSelectedIndex()));
 			}
-		});*/
+		});
 		
 		scrollPane.setVisible(false);
 

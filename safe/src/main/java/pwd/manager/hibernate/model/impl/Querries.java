@@ -107,7 +107,7 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 					if(acc.getUser().equals(user))
 						throw new IllegalArgumentException("This account already exists. Choose a different name for the acc!");
 					
-			
+			}
 				
 				
 			
@@ -127,8 +127,7 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 				tx.commit();
 				}
 				
-			}
-				
+			
 
 				
 			
@@ -513,6 +512,31 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 		return subjects; 
 	}
 
+	public Set<Account> AllAccounts(String username) {
+		Session session = this.getSessionFactory().getCurrentSession();
+		Transaction tx = session.beginTransaction();
+		Set<Account> accounts = new HashSet<Account>();
+		try {
+			
+			User user = (User) session.createCriteria(UserImpl.class)
+					.add(Restrictions.eq("username", username)).uniqueResult();
+			
+			
+			
+			accounts = user.getAccounts() ; 
+	
+
+				
+			
+		}  catch (HibernateException e) {
+			e.printStackTrace();
+			if (tx != null) {
+				tx.rollback();
+			}
+		}
+		
+		return accounts; 
+	}
 
 	
 
