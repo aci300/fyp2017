@@ -6,7 +6,7 @@ import java.util.Set;
 public interface QuerriesService  {
 
 	
-	public void addNewAcc(String newacc, String desc ,  String hint, Integer userID) throws IllegalArgumentException; 
+	public Integer addNewAcc(String newacc, String desc ,  String hint, String user) throws IllegalArgumentException; 
 	
 	public void addNewUser(String newusername, String password) throws IllegalArgumentException ;
 	

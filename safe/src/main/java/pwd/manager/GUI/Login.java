@@ -31,14 +31,15 @@ public class Login {
 
 	private UserLogin user = new UserLogin(); 
 	private JFrame frame;
-	public static String username;
-	public static String password;
+	private String usrlogin; 
+	public String username;
+	public  String password;
 	private JPasswordField passwordField;
 	private JList<String> accountsList;
 	private JTextArea textBox = new JTextArea();
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_1;
-
+	private String usrpwd = null; 
 
 	
 	public static void main(String[] args) {
@@ -61,13 +62,21 @@ public class Login {
 	private void initialize() {
 		
 		final JTextField txtUsername = new JTextField();
+		final JTextField txtDescription = new JTextField();
+		final JTextField txtHint = new JTextField();
+
 		final JButton sign_in = new JButton("Sign in");
 		final JButton new_user = new JButton("New User");
 		final JButton create_user = new JButton("Create User");
+		final JButton new_acc = new JButton("New account");
+		final JButton user_set = new JButton("Settings");
+		final JButton change_p = new JButton("Change");
+		final JButton show_acc = new JButton("Show");
+		final JButton create_acc = new JButton("Create");
 
 		final JButton btnSignOut = new JButton("Sign out");
 
-		frame = new JFrame();
+		frame = new JFrame("Password Manager");
 		frame.setBounds(100, 100, 945, 521);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -96,7 +105,7 @@ public class Login {
 
 		
 		scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(340, 107, 420, 286);
+		scrollPane_1.setBounds(340, 107, 420, 150);
 		frame.getContentPane().add(scrollPane_1);
 
 		textBox.setText("You are NOT connected to your account. \r\nPlease insert your username and password and press Sign in");
@@ -128,6 +137,18 @@ public class Login {
 							.getPassword());
 					username = txtUsername.getText();
 					user.login(username, password);
+					usrpwd = password; 
+					usrlogin = username; 
+					btnSignOut.setVisible(true);
+					scrollPane.setVisible(true);
+					sign_in.setVisible(false);
+					btnSignOut.setVisible(true);
+					passwordField.setVisible(false);
+					txtUsername.setVisible(false);
+					new_user.setVisible(false);
+					new_acc.setVisible(true);
+					accountsList.setModel(new DefaultListModel<String>());
+					textBox.setText("You are connected to your account. \nPlease choose one option!");
 				} catch (IllegalArgumentException e) {
 					scrollPane.setVisible(false);
 					textBox.setText("Invalid or missing credentials!!! ");
@@ -157,9 +178,8 @@ public class Login {
 					frame.getContentPane().add(txtUsername);
 					new_user.setVisible(false);
 					sign_in.setVisible(false);
-
-					create_user.setBounds(700, 31, 117, 22);
-					frame.getContentPane().add(create_user);
+					create_user.setVisible(true);
+					
 
 				} catch (IllegalArgumentException e) {
 					scrollPane.setVisible(false);
@@ -180,7 +200,7 @@ public class Login {
 
 				try {
 					
-					txtUsername.setColumns(20);
+					//txtUsername.setColumns(20);
 					password = new String(((JPasswordField) passwordField)
 							.getPassword());
 					username = txtUsername.getText();
@@ -191,6 +211,10 @@ public class Login {
 					txtUsername.setText("Username");
 					txtUsername.setBounds(31, 31, 265, 22);
 					frame.getContentPane().add(txtUsername);
+					create_user.setVisible(false);
+					/*passwordField = new JPasswordField();
+					passwordField.setBounds(340, 31, 254, 22);
+					frame.getContentPane().add(passwordField);*/
 				} catch (IllegalArgumentException e) {
 					scrollPane.setVisible(false);
 					textBox.setText("Invalid or missing credentials!!! ");
@@ -202,5 +226,111 @@ public class Login {
 
 			}
 		});
+		create_user.setBounds(700, 31, 117, 22);
+		create_user.setVisible(false);
+		frame.getContentPane().add(create_user);
+		
+		
+		
+		txtDescription.setText("Description");
+		txtDescription.setBounds(31, 60, 265, 22);
+		txtDescription.setVisible(false);
+		frame.getContentPane().add(txtDescription);
+		txtDescription.setColumns(50);   
+		
+		txtHint.setText("Hint");
+		txtHint.setBounds(340, 60, 254, 22);
+		txtHint.setVisible(false);
+		frame.getContentPane().add(txtHint);
+		txtHint.setColumns(20);
+		
+		new_acc.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+
+				try {
+					txtUsername.setText("New Account");
+					txtUsername.setBounds(31, 31, 265, 22);
+					frame.getContentPane().add(txtUsername);
+					txtUsername.setVisible(true);
+					passwordField.setVisible(true);
+					txtDescription.setVisible(true);
+					txtHint.setVisible(true);
+					sign_in.setVisible(false);
+					create_acc.setVisible(true);
+					new_acc.setVisible(false);
+
+					
+
+				} catch (IllegalArgumentException e) {
+					scrollPane.setVisible(false);
+					textBox.setText("Invalid or missing credentials!!! ");
+
+				} 
+				
+
+			}
+		});
+		
+		new_acc.setBounds(663, 31, 127, 22);
+		new_acc.setVisible(false);
+		frame.getContentPane().add(new_acc);
+		
+		
+		
+		
+		
+		create_acc.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+
+				try {
+					password = new String(((JPasswordField) passwordField)
+							.getPassword());
+					username = txtUsername.getText();
+					String desc = txtDescription.getText();
+					String hint = txtHint.getText();
+					user.createAccount(username, password, usrlogin, usrpwd, desc, hint);
+					txtUsername.setVisible(false);
+					passwordField.setVisible(false);
+					txtDescription.setVisible(false);
+					txtHint.setVisible(false);
+					sign_in.setVisible(false);
+					create_acc.setVisible(false);
+					new_acc.setVisible(true);
+
+					
+
+				} catch (IllegalArgumentException e) {
+					scrollPane.setVisible(false);
+					textBox.setText("Invalid or missing credentials!!! ");
+
+				} catch (NoSuchAlgorithmException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+				
+
+			}
+		});
+		create_acc.setBounds(663, 31, 97, 22);
+		create_acc.setVisible(false);
+		frame.getContentPane().add(create_acc);
+		
+		
+		btnSignOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				try {
+					
+					
+				} catch (Exception e1) {
+					textBox.setText("You were not signed in   !!!!");
+				}
+			}
+		});
+		btnSignOut.setBounds(802, 500, 97, 25);
+		btnSignOut.setVisible(false);
+		frame.getContentPane().add(btnSignOut);
 	}
 }

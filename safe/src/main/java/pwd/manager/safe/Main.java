@@ -3,6 +3,7 @@ package pwd.manager.safe;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 
 import javax.crypto.BadPaddingException;
@@ -20,7 +21,7 @@ import pwd.manager.hibernate.model.impl.Querries;
 
 public class Main {
 
-	public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+	public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException {
 		
 		
 		Model model = new Model();
@@ -80,10 +81,10 @@ public class Main {
 			}
 		}
 		
-	/*	
-	String decPwd = Decryption.AESdecryption(SHA256Pass, passDB); 
-	System.out.println("dec value vrom DB : " + decPwd);
-	*/
+	String enccPwd = Encryption.AESencryption2("cata", "8000000000000000", "123");	
+	//String decPwd = Decryption.AESdecryption2("cata", "8000000000000000", "fe276480204a35f28aedc1d53181b9ac");
+	System.out.println("dec value vrom DB : " + enccPwd);
+	
 		
 		
 	}

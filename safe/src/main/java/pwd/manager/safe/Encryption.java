@@ -6,9 +6,13 @@ import java.math.BigInteger;
 import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.util.Arrays;
 
 import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
@@ -19,6 +23,7 @@ import sun.misc.BASE64Encoder;
 
 public class Encryption {
 
+	private static String salt = "MfyP2017"; 
 	
 	public static String AESencryption(String password , String plainText){
 		
@@ -75,6 +80,51 @@ public class Encryption {
 	}
 	
 
+	public static String AESencryption2(String password , String IV,  String plainText) throws NoSuchAlgorithmException, InvalidKeySpecException{
+		
+		String printablecipherText = null;
+		byte [] cipherText = null; 
+		 try {
+		SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+		KeySpec spec = new PBEKeySpec(password.toCharArray(), salt.getBytes("UTF-8"), 65536, 256);
+		SecretKey tmp = factory.generateSecret(spec);
+		SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
+		
+		 IvParameterSpec iv = new IvParameterSpec(IV.getBytes("UTF-8"));
+		 
+		 Cipher encAEScipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+		 encAEScipher.init(Cipher.ENCRYPT_MODE, secret, iv);
+
+		/* Cipher encAEScipher = Cipher.getInstance("AES");
+		   encAEScipher.init(Cipher.ENCRYPT_MODE, secret);*/
+		   
+		   // Encrypt the plain text
+		   cipherText = encAEScipher.doFinal(plainText.getBytes());
+		   
+		   // Ciphertext as hex.
+	      printablecipherText = byteArrayToHexString(cipherText);
+		   
+	      //Byte as Base64
+	     // String base64 = base64Encode(cipherText);
+	      
+		   System.out.println("Cipher text: "+printablecipherText);
+		  // System.out.println("Cipher text as base64 : "+ base64);
+		   
+		 byte[] backtobyte = hexStringToByteArray(printablecipherText);
+		  if(Arrays.equals(cipherText, backtobyte)) System.out.println("yaaay12345");
+		
+		 } catch (Exception e){
+			   System.out.println(e);
+		       } 
+		   
+		
+		return printablecipherText ; 
+		
+	
+		
+	}
+	
+	
 	
 
     public static String byteArrayToHexString(byte[] data) {

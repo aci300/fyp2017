@@ -5,6 +5,8 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.util.Arrays;
 import java.util.Base64;
 
@@ -12,10 +14,17 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 public class Decryption {
+	private static String salt = "MfyP2017"; 
+
+	
 	
 	public static String AESdecryption(String password, String encrypted) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, NoSuchAlgorithmException {
 			
@@ -50,6 +59,37 @@ public class Decryption {
 	        return originalString;
 	        
 	}
+	
+	
+	
+	
+	public static String AESdecryption2(String password, String IV, String cipherText)
+			throws NoSuchAlgorithmException, InvalidKeySpecException {
+		String originalString = null;
+		try {
+			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+			KeySpec spec = new PBEKeySpec(password.toCharArray(), salt.getBytes("UTF-8"), 65536, 256);
+			SecretKey tmp = factory.generateSecret(spec);
+			SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
+
+			IvParameterSpec iv = new IvParameterSpec(IV.getBytes("UTF-8"));
+
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+			cipher.init(Cipher.DECRYPT_MODE, secret, iv);
+
+			byte[] backtobyte = hexStringToByteArray(cipherText);
+			byte[] decryptedText = cipher.doFinal(backtobyte);
+			originalString = new String(decryptedText);
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return originalString;
+
+	}
+	
+		
 	@SuppressWarnings("restriction")
 	public static String toHexString(byte[] array) {
 	    return DatatypeConverter.printHexBinary(array);

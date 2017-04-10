@@ -1,7 +1,9 @@
 package pwd.manager.hibernate.model.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Criteria;
@@ -11,6 +13,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+
+import com.google.common.base.Objects;
 
 import pwd.manager.hibernate.model.HibernateService;
 import pwd.manager.hibernate.model.Account;
@@ -82,20 +86,23 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 		}
 	}
 		
-	public void addNewAcc(String newacc, String desc ,  String hint, Integer userID) throws IllegalArgumentException {
+	@SuppressWarnings("unchecked")
+	public Integer addNewAcc(String newacc, String desc ,  String hint,String username) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		Session session = this.getSessionFactory().getCurrentSession();
 		Transaction tx = session.beginTransaction();
-
+		Integer id = -1; 
 		try {
 			
-			Account acc = (Account) session.createCriteria(AccountImpl.class)
-					.add(Restrictions.eq("account", newacc)).add(Restrictions.eq("user_id", userID)).uniqueResult();
+			User user = (User) session.createCriteria(UserImpl.class)
+					.add(Restrictions.eq("username", username)).uniqueResult();
+		//	Integer userID = user.getId(); 
+			List<Account> accounts = new ArrayList<Account>();
+			accounts = session.createCriteria(AccountImpl.class).add(Restrictions.eq("account", newacc)).list();
       
-			if (acc == null )
+			if (accounts.isEmpty())
 			{
-				User user = (User) session.createCriteria(UserImpl.class)
-						.add(Restrictions.eq("id", userID)).uniqueResult();
+				
 				
 				
 				Account newaccount = new AccountImpl(); 
@@ -107,8 +114,11 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 				newaccount.setHint(hint);
 				newaccount.setUser(user);
 				session.save(newaccount);
+				id = newaccount.getId();
 
 				tx.commit();
+				
+				
 			}
 			else 
 				throw new IllegalArgumentException("This account already exists. Choose a different name for the acc!");
@@ -122,6 +132,7 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 				tx.rollback();
 			}
 		}
+		return id;
 	}
 	
 	public Integer lastAccID(String account, String username)
@@ -306,8 +317,10 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 			if (user == null){
 				 throw new IllegalArgumentException("User doesn't exist!");
 			}
-
-			if(user.getPassword().equals(pass))
+			String dbPass = user.getPassword(); 
+            System.out.println("DB pass: " + user.getPassword());
+			System.out.println("Given pass: " + pass);
+            if(Objects.equal(dbPass, pass))
 				status=true; 
 		}  catch (HibernateException e) {
 			e.printStackTrace();
