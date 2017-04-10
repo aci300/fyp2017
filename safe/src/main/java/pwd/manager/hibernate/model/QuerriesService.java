@@ -2,6 +2,7 @@ package pwd.manager.hibernate.model;
 
 
 import java.util.Set;
+import java.util.Vector;
 
 public interface QuerriesService  {
 
@@ -12,7 +13,7 @@ public interface QuerriesService  {
 	
 	public void changeUserPassword(String username, String newpassword, String confirm) throws IllegalArgumentException;
 	
-	public void addAccPassword(String accountname, String newpassword) ;
+	public void addAccPassword(Integer accountID, String newpassword) ;
 	
 	public void changeAccPassword(String username, String newpassword , String confirm) throws IllegalArgumentException; 
 	
@@ -27,9 +28,7 @@ public interface QuerriesService  {
 	public void deleteUser(String username); 
 	
 	public Integer getAccID(String username);
-	
-	public Integer lastAccID(String account, String username);
-	
+	public Vector<String> getAllAccounts(String username); 	
 	public String showPass(String account); 
 	public Boolean checkUserPass(String username, String pass); 
 	

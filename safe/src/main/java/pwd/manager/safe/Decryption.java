@@ -73,13 +73,13 @@ public class Decryption {
 			SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
 
 			IvParameterSpec iv = new IvParameterSpec(IV.getBytes("UTF-8"));
-
+            System.out.println("Decrypt" + password  + " " + IV); 
 			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
 			cipher.init(Cipher.DECRYPT_MODE, secret, iv);
-
+             System.out.println("Decrypting" + cipherText);
 			byte[] backtobyte = hexStringToByteArray(cipherText);
 			byte[] decryptedText = cipher.doFinal(backtobyte);
-			originalString = new String(decryptedText);
+			originalString = byteArrayToHexString(decryptedText);
 
 		} catch (Exception e) {
 			System.out.println(e);

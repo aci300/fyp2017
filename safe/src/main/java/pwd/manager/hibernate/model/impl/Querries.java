@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -135,45 +136,14 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 		return id;
 	}
 	
-	public Integer lastAccID(String account, String username)
-	{
-		
-		Session session = this.getSessionFactory().getCurrentSession();
-		Transaction tx = session.beginTransaction();
-		Integer result = -1; 
-		try {
 	
-			User user = (User) session.createCriteria(UserImpl.class)
-					.add(Restrictions.eq("username", username)).uniqueResult();
-			Integer userID = user.getId(); 
-			
-			Account acc = (Account) session.createCriteria(AccountImpl.class)
-					.add(Restrictions.eq("account", account)).add(Restrictions.eq("user_id", userID)).uniqueResult();
-        	
-		  Serializable ser = session.save(acc);
-	        if (ser != null) {
-	            result = (Integer) ser;
-	            
-	        	tx.commit(); }
-			}
-			catch (HibernateException e) {
-				e.printStackTrace();
-				if (tx != null) {
-					tx.rollback();
-				}
-			
-			}
-		return result; 
-		
-	}
-	
-	public void addAccPassword(String accountID, String newpassword) throws IllegalArgumentException {
+	public void addAccPassword(Integer accountID, String newpassword) throws IllegalArgumentException {
 		Session session = this.getSessionFactory().getCurrentSession();
 		Transaction tx = session.beginTransaction();
 
 		try {
 			
-
+				//Integer n = Integer.valueOf(accountID);
 				if (newpassword.equals("") || newpassword.contains(" ")){
 					throw new IllegalArgumentException("Character (space) not accepted!");
 				}
@@ -441,23 +411,27 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 	}
 
 
-	public Set<Account> getAllAccounts() {
+	public Vector<String> getAllAccounts(String username) {
 		Session session = this.getSessionFactory().getCurrentSession();
 		Transaction tx = session.beginTransaction();
-		
+		Vector<String> subjects = new Vector<String>();
 		try {
-			Criteria crit = session.createCriteria(AccountImpl.class);
-			ScrollableResults items = crit.scroll();
+			
+			User user = (User) session.createCriteria(UserImpl.class)
+					.add(Restrictions.eq("username", username)).uniqueResult();
+			
 			
 			Set<Account> accounts = new HashSet<Account>();
-			int count=0;
-            while ( items.next() ) {
-                Account account = (Account) items.get(0);
-                accounts.add(account);
-                count++;
+			accounts = user.getAccounts() ; 
+	
+			for(Account  acc: accounts) 
+             {
+               subjects.add(acc.getAccount()) ; 
+             
+               
             }
 
-			return accounts;
+			
 			
 		
 			
@@ -469,7 +443,7 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 			}
 		}
 		
-		return null; 
+		return subjects; 
 	}
 
 

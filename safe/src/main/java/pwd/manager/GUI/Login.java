@@ -73,6 +73,7 @@ public class Login {
 		final JButton change_p = new JButton("Change");
 		final JButton show_acc = new JButton("Show");
 		final JButton create_acc = new JButton("Create");
+		final JButton get_accounts = new JButton("Get Accounts");
 
 		final JButton btnSignOut = new JButton("Sign out");
 
@@ -147,6 +148,8 @@ public class Login {
 					txtUsername.setVisible(false);
 					new_user.setVisible(false);
 					new_acc.setVisible(true);
+					get_accounts.setVisible(true);
+
 					accountsList.setModel(new DefaultListModel<String>());
 					textBox.setText("You are connected to your account. \nPlease choose one option!");
 				} catch (IllegalArgumentException e) {
@@ -316,6 +319,32 @@ public class Login {
 		create_acc.setBounds(663, 31, 97, 22);
 		create_acc.setVisible(false);
 		frame.getContentPane().add(create_acc);
+		
+		
+		get_accounts.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				try {
+					/*String password = new String(
+							((JPasswordField) passwordField).getPassword());
+					*/// DefaultListModel<String> dlm = new
+					// DefaultListModel<String>();
+					
+				
+					textBox.setText("Select one subject to get the content");
+					accountsList.setListData(user.getAccounts(usrlogin));
+					
+				}catch (IllegalArgumentException e) {
+					scrollPane.setVisible(false);
+					textBox.setText("Invalid or missing credentials!!! ");
+
+				} 
+			}
+		});
+		get_accounts.setBounds(12, 66, 124, 25);
+		get_accounts.setVisible(false);
+		frame.getContentPane().add(get_accounts);
+		
 		
 		
 		btnSignOut.addActionListener(new ActionListener() {

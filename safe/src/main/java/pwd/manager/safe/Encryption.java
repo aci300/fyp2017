@@ -91,7 +91,8 @@ public class Encryption {
 		SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
 		
 		 IvParameterSpec iv = new IvParameterSpec(IV.getBytes("UTF-8"));
-		 
+         System.out.println("Encrypt" + password  + "" + IV); 
+
 		 Cipher encAEScipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
 		 encAEScipher.init(Cipher.ENCRYPT_MODE, secret, iv);
 
