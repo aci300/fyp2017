@@ -39,7 +39,7 @@ public class Model {
     private String password; 
     private String title;
     private String description; 
-    private static String salt = "MyPasswordSafeManagerasmyfinalyearProject2017"; 
+    private static String salt = "salt"; 
 
     /**
      * Constructor
@@ -168,8 +168,8 @@ public class Model {
 	
 	 public static String hashPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
 		
-		    PBEKeySpec spec = new PBEKeySpec(password.toCharArray(),salt.getBytes(),100000,256);
-		    SecretKeyFactory key = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+		    PBEKeySpec spec = new PBEKeySpec(password.toCharArray(),salt.getBytes(),80000,256);
+		    SecretKeyFactory key = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
 		    byte[] hashedPassword = key.generateSecret(spec).getEncoded();
 		    return String.format("%x", new BigInteger(hashedPassword));
 		  }

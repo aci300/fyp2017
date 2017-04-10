@@ -40,9 +40,10 @@ public class UserLogin
 					{	currPass = pass; 
 					String message = "Successfully loged in";  
 					System.out.println(message);}
+					else throw new IllegalArgumentException("Incorrect password!");
 			} catch (IllegalArgumentException e) {
-				String message = e.getMessage();
-				System.out.println(message);
+				throw new IllegalArgumentException(e);
+				
 			} catch (Exception e){
 				String message = e.getMessage();
 				System.out.println(message);
@@ -114,13 +115,12 @@ public class UserLogin
 					{
 						IV = IV + "0"; 
 					}
-					String hashPass = Model.hashPassword(userpass+IV);	
-					newpassword = Encryption.AESencryption(hashPass, pass);
-					//Encryption.AESencryption2(userpass, IV, pass);
+				//	String hashPass = Model.hashPassword(userpass+IV);	
+					newpassword = Encryption.AESencryption2(userpass, IV, pass);
 					System.out.println("Sefuuuule");
 					service.addAccPassword(lastID, newpassword);	
 					String message = "Successfully created user";
-					System.out.println(Decryption.AESdecryption(hashPass, newpassword));
+					System.out.println(Decryption.AESdecryption2(userpass, IV, newpassword));
 					System.out.println(message);
 			} catch (IllegalArgumentException e) {
 				String message = e.getMessage();

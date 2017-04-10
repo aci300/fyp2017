@@ -23,7 +23,7 @@ import sun.misc.BASE64Encoder;
 
 public class Encryption {
 
-	private static String salt = "MfyP2017"; 
+	private static String salt = "MyFiNalYearP2017"; 
 	
 	public static String AESencryption(String password , String plainText){
 		
@@ -70,7 +70,7 @@ public class Encryption {
 			    System.out.println("Original text: " + originalString);*/
 
 		       } catch (Exception e){
-			   System.out.println("doh");
+			   System.out.println(e);
 		       } 
 		   
 
@@ -91,7 +91,7 @@ public class Encryption {
 		SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
 		
 		 IvParameterSpec iv = new IvParameterSpec(IV.getBytes("UTF-8"));
-         System.out.println("Encrypt" + password  + "" + IV); 
+         System.out.println("Encrypt: " + password  + "" + IV); 
 
 		 Cipher encAEScipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
 		 encAEScipher.init(Cipher.ENCRYPT_MODE, secret, iv);

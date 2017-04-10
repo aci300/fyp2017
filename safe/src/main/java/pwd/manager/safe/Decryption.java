@@ -22,7 +22,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 public class Decryption {
-	private static String salt = "MfyP2017"; 
+	private static String salt = "MyFiNalYearP2017";  //16 bytes 
 
 	
 	
@@ -79,7 +79,7 @@ public class Decryption {
              System.out.println("Decrypting" + cipherText);
 			byte[] backtobyte = hexStringToByteArray(cipherText);
 			byte[] decryptedText = cipher.doFinal(backtobyte);
-			originalString = byteArrayToHexString(decryptedText);
+			originalString = new String(decryptedText);
 
 		} catch (Exception e) {
 			System.out.println(e);

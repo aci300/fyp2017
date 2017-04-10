@@ -290,6 +290,7 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 			String dbPass = user.getPassword(); 
             System.out.println("DB pass: " + user.getPassword());
 			System.out.println("Given pass: " + pass);
+			System.out.println(status);
             if(Objects.equal(dbPass, pass))
 				status=true; 
 		}  catch (HibernateException e) {
@@ -298,7 +299,7 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 				tx.rollback();
 			}
 		}
-		
+		System.out.println(status);
 		return status; 
 		
 		

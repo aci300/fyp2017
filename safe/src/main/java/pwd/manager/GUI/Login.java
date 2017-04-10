@@ -154,8 +154,10 @@ public class Login {
 					accountsList.setModel(new DefaultListModel<String>());
 					textBox.setText("You are connected to your account. \nPlease choose one option!");
 				} catch (IllegalArgumentException e) {
+					String message = e.getMessage();
+					
 					scrollPane.setVisible(false);
-					textBox.setText("Invalid or missing credentials!!! ");
+					textBox.setText(message);
 
 				} catch (NoSuchAlgorithmException e) {
 					// TODO Auto-generated catch block
@@ -267,6 +269,7 @@ public class Login {
 					txtDescription.setVisible(true);
 					txtHint.setVisible(true);
 					sign_in.setVisible(false);
+					get_accounts.setVisible(false);
 					create_acc.setVisible(true);
 					new_acc.setVisible(false);
 
@@ -305,6 +308,7 @@ public class Login {
 					passwordField.setVisible(false);
 					txtDescription.setVisible(false);
 					txtHint.setVisible(false);
+					get_accounts.setVisible(true);
 					sign_in.setVisible(false);
 					create_acc.setVisible(false);
 					new_acc.setVisible(true);
@@ -348,7 +352,7 @@ public class Login {
 				} 
 			}
 		});
-		get_accounts.setBounds(12, 66, 124, 25);
+		get_accounts.setBounds(12, 90, 124, 25);
 		get_accounts.setVisible(false);
 		frame.getContentPane().add(get_accounts);
 		
