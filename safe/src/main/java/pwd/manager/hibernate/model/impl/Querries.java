@@ -101,10 +101,17 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 			List<Account> accounts = new ArrayList<Account>();
 			accounts = session.createCriteria(AccountImpl.class).add(Restrictions.eq("account", newacc)).list();
       
-			if (accounts.isEmpty())
+			if (!accounts.isEmpty())
 			{
+				for(Account  acc: accounts) 
+					if(acc.getUser().equals(user))
+						throw new IllegalArgumentException("This account already exists. Choose a different name for the acc!");
+					
+			
 				
 				
+			
+			else {
 				
 				Account newaccount = new AccountImpl(); 
 				newaccount.setAccount(newacc);
@@ -118,13 +125,12 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 				id = newaccount.getId();
 
 				tx.commit();
-				
+				}
 				
 			}
-			else 
-				throw new IllegalArgumentException("This account already exists. Choose a different name for the acc!");
+				
 
-			
+				
 			
 		}
 		catch (HibernateException e) {
@@ -380,11 +386,74 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 		}
 	}
 
-	public Integer getAccID(String username) {
+	public Integer getAccID(String username ,  String account) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		Session session = this.getSessionFactory().getCurrentSession();
+		Transaction tx = session.beginTransaction();
+		Integer ID = null; 
+	//	Vector<String> subjects = new Vector<String>();
+		try {
+			
+			User user = (User) session.createCriteria(UserImpl.class)
+					.add(Restrictions.eq("username", username)).uniqueResult();
+			
+			
+			Set<Account> accounts = new HashSet<Account>();
+			accounts = user.getAccounts() ; 
+	
+			for(Account  acc: accounts) 
+             {
+               if(acc.getAccount().equals(account))
+            	   ID = acc.getId(); 
+             
+               
+            }
+
+				
+			
+		}  catch (HibernateException e) {
+			e.printStackTrace();
+			if (tx != null) {
+				tx.rollback();
+			}
+		}
+		return ID;
 	}
 
+	public String getEncUserPass( String account, String username){
+		Session session = this.getSessionFactory().getCurrentSession();
+		Transaction tx = session.beginTransaction();
+		String encPwd = null; 
+	//	Vector<String> subjects = new Vector<String>();
+		try {
+			
+			User user = (User) session.createCriteria(UserImpl.class)
+					.add(Restrictions.eq("username", username)).uniqueResult();
+			
+			
+			Set<Account> accounts = new HashSet<Account>();
+			accounts = user.getAccounts() ; 
+	
+			for(Account  acc: accounts) 
+             {
+               if(acc.getAccount().equals(account))
+            	   encPwd = acc.getPassword(); 
+             
+               
+            }
+
+				
+			
+		}  catch (HibernateException e) {
+			e.printStackTrace();
+			if (tx != null) {
+				tx.rollback();
+			}
+		}
+		return encPwd;
+		
+	}
 	public String showPass(String account) {
 		// TODO Auto-generated method stub
 		Session session = this.getSessionFactory().getCurrentSession();
@@ -432,10 +501,7 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
                
             }
 
-			
-			
-		
-			
+				
 			
 		}  catch (HibernateException e) {
 			e.printStackTrace();
@@ -446,6 +512,9 @@ public class Querries extends HibernateServiceImpl implements QuerriesService{
 		
 		return subjects; 
 	}
+
+
+	
 
 
 	

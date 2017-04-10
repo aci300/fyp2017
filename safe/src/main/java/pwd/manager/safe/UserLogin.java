@@ -166,6 +166,53 @@ public class UserLogin
 		return accounts;
 	}
 	
+	
+	public String showAccPass(String account , String user ){
+		
+		String decrPass = null; 
+		model = new Model();
+		 dbCommand = "update"; 
+		 
+		serviceRegistry= model.getServiceRegistry(dbCommand); 
+		SessionFactory factory = null;
+		try {
+			factory = model.createSessionFactory(serviceRegistry);
+			QuerriesService service = new Querries(factory);
+		//	String user = "vasileioionita2@gmail.com";
+		//	String hashPass = Model.toHexString(model.SHA256(pass));
+			String newpassword = null; 
+			
+			try {
+				String IV = Integer.toString(service.getAccID(user, account));
+				System.out.println("accID : " + IV);
+				while(IV.length() < 16 )
+				{
+					IV = IV + "0"; 
+				}
+				
+				newpassword = service.getEncUserPass(account, user);
+				decrPass = Decryption.AESdecryption2(currPass, IV, newpassword);
+				
+				
+				
+				
+			} catch (IllegalArgumentException e) {
+				String message = e.getMessage();
+				System.out.println(message);
+			} catch (Exception e){
+				String message = e.getMessage();
+				System.out.println(message);
+			}
+		
+		} finally {
+			if(factory != null && !factory.isClosed()) {
+				factory.close();
+				}
+			}
+		
+		return decrPass;
+		
+	}
     public static void main( String[] args )
     {
        // System.out.println( "Hello World!" );

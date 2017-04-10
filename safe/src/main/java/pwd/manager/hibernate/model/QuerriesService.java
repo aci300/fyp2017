@@ -27,9 +27,11 @@ public interface QuerriesService  {
 	
 	public void deleteUser(String username); 
 	
-	public Integer getAccID(String username);
+	public Integer getAccID(String username ,  String account);
 	public Vector<String> getAllAccounts(String username); 	
 	public String showPass(String account); 
 	public Boolean checkUserPass(String username, String pass); 
 	
+	public String getEncUserPass( String account, String username);
+
 }
