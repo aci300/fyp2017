@@ -24,6 +24,7 @@ public class UserLogin
 	private ServiceRegistry serviceRegistry = null;
 	private String currPass= null; 
 	private String currUser = null; 
+	private Vector<String> accounts = new Vector<String>();
 
 	
 	public void login(String username, String pass) throws NoSuchAlgorithmException, InvalidKeySpecException{
@@ -150,8 +151,9 @@ public class UserLogin
 		String decPwd = null;
 		String account=null; 
 		int count=0; 
-		Set<Account> accounts = new HashSet<Account>();
-			
+		//Set<Account> accounts = new HashSet<Account>();
+		//Vector<String> accounts2 = new Vector<String>();	
+		
 		model = new Model();
 		 dbCommand = "update"; 
 		 
@@ -164,19 +166,20 @@ public class UserLogin
 			
 			try {
 				
-		
-				accounts = service.AllAccounts(username);
+				//accounts2 = getAccounts(username); 
+				//accounts = service.AllAccounts(username);
 			
-		
+		          account = accounts.get(index);
 		
 				
-				for(Account  acc: accounts) 
+				/*for(Account  acc: accounts) 
 				{
 					if( count == index )
 						account = acc.getAccount() ; 
         
 					count++; 
-        		}
+        		}*/
+				System.out.println("fcking acc " + account);
 				decPwd = showAccPass(account, currUser); 
 				
 
@@ -196,19 +199,17 @@ public class UserLogin
 		 
           
        
-
-		
-		
+        count=0; 
 		return decPwd; 
 		
 	}
 	
 	
 	public Vector<String> getAccounts(String username){
-		Vector<String> accounts = new Vector<String>();
+		//Vector<String> accounts = new Vector<String>();
 		
 				
-				model = new Model();
+		 model = new Model();
 		 dbCommand = "update"; 
 		 
 		serviceRegistry= model.getServiceRegistry(dbCommand); 
@@ -229,6 +230,9 @@ public class UserLogin
 				factory.close();
 				}
 			}
+		for(int i = 0 ; i < accounts.size(); i++ ) {
+			System.out.println("account: " + accounts.get(i));
+		}
 		return accounts;
 	}
 	

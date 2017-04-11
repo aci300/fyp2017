@@ -90,9 +90,11 @@ public class Login {
 		scrollPane.setViewportView(accountsList);
 		accountsList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
-				if (accountsList.getSelectedIndex() >= 0)
+				if (accountsList.getSelectedIndex() >= 0){
 					textBox.setText( user.displayDecryptedPassbyIndex(accountsList
 							.getSelectedIndex()));
+				//System.out.println(accountsList.getSelectedIndex());
+				}
 			}
 		});
 		
