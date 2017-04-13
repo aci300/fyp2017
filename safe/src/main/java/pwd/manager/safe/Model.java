@@ -5,22 +5,9 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Arrays;
-import java.util.Properties;
-
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.xml.bind.DatatypeConverter;
-
-//import org.apache.commons.codec.binary.Hex;
-
-
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -37,12 +24,9 @@ public class Model {
 
 	private String username;
     private String password; 
-	private String url;
 	private String driver;
 	private String dialect;
 
-    private String title;
-    private String description; 
     private static String salt = "salt"; 
 
     /**
@@ -67,14 +51,6 @@ public class Model {
     	this.password = password;
     }
     
-    public void setTitle(String title){
-    	this.title = title;
-    }
-    
-
-    public void setDescription(String description){
-    	this.description = description;
-    }
     
     /**
      * @return username for database
@@ -204,14 +180,8 @@ public class Model {
 	    return new String(hexChars);
 	}
 	
-	@SuppressWarnings("restriction")
-	public static String toHexString(byte[] array) {
-	    return DatatypeConverter.printHexBinary(array);
-	}
+	
 
-	@SuppressWarnings("restriction")
-	public static byte[] toByteArray(String s) {
-	    return DatatypeConverter.parseHexBinary(s);
-	}
+
 	
 }

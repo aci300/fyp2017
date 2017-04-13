@@ -80,9 +80,10 @@ public class Querries extends HibernateServiceImpl implements QuerriesService {
 		Transaction tx = session.beginTransaction();
 		Integer id = -1;
 		try {
-
+			
 			User user = (User) session.createCriteria(UserImpl.class).add(Restrictions.eq("username", username))
 					.uniqueResult();
+			System.out.println(user.getUsername());
 			// Integer userID = user.getId();
 			List<Account> accounts = new ArrayList<Account>();
 			accounts = session.createCriteria(AccountImpl.class).add(Restrictions.eq("account", newacc)).list();
@@ -91,11 +92,10 @@ public class Querries extends HibernateServiceImpl implements QuerriesService {
 				for (Account acc : accounts)
 					if (acc.getUser().equals(user))
 						throw new IllegalArgumentException(
-								"This account already exists. Choose a different name for the acc!");
-
+								"This account already exists. Choose a different name for the account!");
 			}
 
-			else {
+		
 
 				Account newaccount = new AccountImpl();
 				newaccount.setAccount(newacc);
@@ -109,7 +109,7 @@ public class Querries extends HibernateServiceImpl implements QuerriesService {
 				id = newaccount.getId();
 
 				tx.commit();
-			}
+			
 
 		} catch (HibernateException e) {
 			e.printStackTrace();

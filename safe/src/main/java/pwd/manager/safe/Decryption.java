@@ -2,14 +2,9 @@ package pwd.manager.safe;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
-import java.util.Arrays;
-import java.util.Base64;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -21,6 +16,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
+@SuppressWarnings("restriction")
 public class Decryption {
 	private static String salt = "MyFiNalYearP2017";  //16 bytes 
 
@@ -85,16 +81,15 @@ public class Decryption {
 	}
 	
 		
-	@SuppressWarnings("restriction")
 	public static String toHexString(byte[] array) {
 	    return DatatypeConverter.printHexBinary(array);
 	}
 
-	@SuppressWarnings("restriction")
 	public static byte[] toByteArray(String s) {
 	    return DatatypeConverter.parseHexBinary(s);
 	}
-    private static String byteArrayToHexString(byte[] data) {
+    @SuppressWarnings("unused")
+	private static String byteArrayToHexString(byte[] data) {
 	StringBuffer buf = new StringBuffer();
 	for (int i = 0; i < data.length; i++) {
 	    int halfbyte = (data[i] >>> 4) & 0x0F;

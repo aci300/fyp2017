@@ -9,8 +9,6 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.SQLException;
-
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 import java.awt.event.MouseAdapter;
@@ -19,8 +17,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionListener;
-
-import pwd.manager.hibernate.model.Database;
 import pwd.manager.safe.UserLogin;
 
 import javax.swing.event.ListSelectionEvent;
@@ -29,7 +25,6 @@ import javax.swing.event.ListSelectionEvent;
 public class Login {
 
 	private UserLogin user = new UserLogin();
-	private Database db = null;
 	private JFrame frame;
 	private String usrlogin;
 	public String username;
@@ -67,25 +62,18 @@ public class Login {
 		final JTextField txtUsername = new JTextField();
 		final JTextField txtDescription = new JTextField();
 		final JTextField txtHint = new JTextField();
-
 		final JButton sign_in = new JButton("Sign in");
 		final JButton dbSettings = new JButton("DB Settings");
 		final JButton new_user = new JButton("New User");
 		final JButton create_user = new JButton("Create User");
 		final JButton new_acc = new JButton("New account");
-		final JButton user_set = new JButton("Settings");
-		final JButton change_p = new JButton("Change");
 		final JButton create_acc = new JButton("Create");
 		final JButton get_accounts = new JButton("Get Accounts");
-
 		final JButton btnSignOut = new JButton("Sign out");
-
 		final JTextField DBUsername = new JTextField();
 		final JTextField DBurl = new JTextField();
-
 		final JButton apply = new JButton("Apply");
-		final JButton close = new JButton("Close");
-
+	
 		frame = new JFrame("Password Manager");
 		frame.setBounds(100, 100, 945, 521);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -112,7 +100,7 @@ public class Login {
 		frame.getContentPane().add(scrollPane_1);
 
 		textBox.setText(
-				"You are NOT connected to your account. \r\nPlease insert your username and password and press Sign in");
+				"You are NOT connected . \r\nPlease insert your username and password and press Sign in \r\n Or create a New User");
 		textBox.setWrapStyleWord(true);
 		scrollPane_1.setViewportView(textBox);
 
@@ -144,16 +132,19 @@ public class Login {
 					btnSignOut.setVisible(true);
 					scrollPane.setVisible(true);
 					sign_in.setVisible(false);
-					btnSignOut.setVisible(true);
 					passwordField.setVisible(false);
 					txtUsername.setVisible(false);
 					new_user.setVisible(false);
 					new_acc.setVisible(true);
 					get_accounts.setVisible(true);
+					passwordField2.setVisible(false);
+					DBUsername.setVisible(false);
+					DBurl.setVisible(false);
+					apply.setVisible(false);
 					dbSettings.setVisible(false);
 
 					accountsList.setModel(new DefaultListModel<String>());
-					textBox.setText("You are connected to your account. \nPlease choose one option!");
+					textBox.setText("You are connected. \nPlease choose one option!");
 				} catch (IllegalArgumentException e) {
 					String message = e.getMessage();
 
@@ -217,7 +208,7 @@ public class Login {
 					new_user.setVisible(true);
 					sign_in.setVisible(true);
 					txtUsername.setText("Username");
-					txtUsername.setBounds(31, 31, 265, 22);
+					passwordField.setText("Password");
 					frame.getContentPane().add(txtUsername);
 					create_user.setVisible(false);
 					/*
@@ -260,8 +251,6 @@ public class Login {
 			public void mouseClicked(MouseEvent arg0) {
 
 				try {
-					txtUsername.setText("New Account");
-					txtUsername.setBounds(31, 31, 265, 22);
 					frame.getContentPane().add(txtUsername);
 					txtUsername.setVisible(true);
 					passwordField.setVisible(true);
@@ -272,6 +261,10 @@ public class Login {
 					create_acc.setVisible(true);
 					new_acc.setVisible(false);
 					dbSettings.setVisible(false);
+					txtUsername.setText("New Account");
+					passwordField.setText("Password");
+					textBox.setText("Add the details for the new accout");
+
 
 				} catch (IllegalArgumentException e) {
 					scrollPane.setVisible(false);
@@ -304,10 +297,16 @@ public class Login {
 					sign_in.setVisible(false);
 					create_acc.setVisible(false);
 					new_acc.setVisible(true);
+					textBox.setText("The new account has been added. Refresh the list! ");
+
 
 				} catch (IllegalArgumentException e) {
-					scrollPane.setVisible(false);
-					textBox.setText("Invalid or missing credentials!!! ");
+					txtUsername.setText("New Account");
+					passwordField.setText("Password");
+					get_accounts.setVisible(true);
+					accountsList.setVisible(true);
+					scrollPane.setVisible(true);
+					textBox.setText(e.getMessage());
 
 				} catch (NoSuchAlgorithmException e) {
 					// TODO Auto-generated catch block
@@ -330,7 +329,9 @@ public class Login {
 					 */
 					// DefaultListModel<String> dlm = new
 					// DefaultListModel<String>();
-
+				
+					scrollPane.setVisible(true);
+					accountsList.setVisible(true);
 					textBox.setText("Select one account to get the content");
 					accountsList.setListData(user.getAccounts(usrlogin));
 
@@ -345,18 +346,15 @@ public class Login {
 		get_accounts.setVisible(false);
 		frame.getContentPane().add(get_accounts);
 
-		DBUsername.setText("Database Username");
 		DBUsername.setBounds(30, 120, 250, 22);
 		frame.getContentPane().add(DBUsername);
 		DBUsername.setColumns(20);
 
-		DBurl.setText("Database URL - PostgreSql/MySQL");
 		DBurl.setBounds(30, 90, 250, 22);
 		frame.getContentPane().add(DBurl);
 		DBurl.setColumns(40);
 
 		passwordField2 = new JPasswordField();
-		passwordField2.setText("Password");
 		passwordField2.setBounds(30, 150, 250, 22);
 		frame.getContentPane().add(passwordField2);
 		passwordField2.setVisible(false);
@@ -373,6 +371,11 @@ public class Login {
 				DBurl.setVisible(true);
 				apply.setVisible(true);
 				dbSettings.setVisible(false);
+				DBUsername.setText("Database Username");
+				DBurl.setText("Database URL - PostgreSql/MySQL");
+				passwordField2.setText("Password");
+
+
 
 			}
 		});
@@ -387,7 +390,7 @@ public class Login {
 				user.setDBSettings(DBusername, DBpassword, DBUrl);
 				// user = new UserLogin(db);
 				textBox.setText(
-						"The Database Settings have been updated. \r\n You are NOT connected to your account. \n Please sign in or create a new user!");
+						"The Database Settings have been updated. \r\n You are NOT connected. \n Please sign in or create a new user!");
 
 				passwordField2.setVisible(false);
 				DBUsername.setVisible(false);
@@ -408,13 +411,26 @@ public class Login {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-
+					user.signout();
+					btnSignOut.setVisible(false);
+					scrollPane.setVisible(false);
+					sign_in.setVisible(true);
+					//btnSignOut.setVisible(true);
+					passwordField.setVisible(true);
+					txtUsername.setVisible(true);
+					new_user.setVisible(true);
+					new_acc.setVisible(false);
+					get_accounts.setVisible(false);
+					dbSettings.setVisible(true);
+					txtUsername.setText("Username");
+					passwordField.setText("Password");
+					textBox.setText("Successfully signed out. \n Sign in or create a new user  ");
 				} catch (Exception e1) {
 					textBox.setText("You were not signed in   !!!!");
 				}
 			}
 		});
-		btnSignOut.setBounds(802, 500, 97, 25);
+		btnSignOut.setBounds(700, 400, 97, 25);
 		btnSignOut.setVisible(false);
 		frame.getContentPane().add(btnSignOut);
 	}

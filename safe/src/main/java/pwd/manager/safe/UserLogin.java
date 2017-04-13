@@ -5,8 +5,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Vector;
 import org.hibernate.SessionFactory;
 import org.hibernate.service.ServiceRegistry;
-
-import pwd.manager.hibernate.model.Database;
 import pwd.manager.hibernate.model.QuerriesService;
 import pwd.manager.hibernate.model.impl.Querries;
 
@@ -60,7 +58,7 @@ public class UserLogin {
 				} else
 					throw new IllegalArgumentException("Incorrect password!");
 			} catch (IllegalArgumentException e) {
-				throw new IllegalArgumentException(e);
+				throw new IllegalArgumentException(e.getMessage());
 
 			} catch (Exception e) {
 				String message = e.getMessage();
@@ -140,12 +138,14 @@ public class UserLogin {
 				newpassword = Encryption.AESencryption2(userpass, IV, pass);
 				System.out.println("Sefuuuule");
 				service.addAccPassword(lastID, newpassword);
-				String message = "Successfully created user";
+				String message = "Successfully created account";
 				System.out.println(Decryption.AESdecryption2(userpass, IV, newpassword));
 				System.out.println(message);
 			} catch (IllegalArgumentException e) {
 				String message = e.getMessage();
 				System.out.println(message);
+				throw new IllegalArgumentException(message); 
+				
 			} catch (Exception e) {
 				String message = e.getMessage();
 				System.out.println(message);
@@ -245,4 +245,8 @@ public class UserLogin {
 
 	}
 
+	public void signout(){
+		
+		model = null; 
+	}
 }

@@ -10,7 +10,6 @@ import javax.swing.JPasswordField;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
-
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 import java.awt.event.MouseAdapter;
@@ -19,9 +18,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionListener;
-
-import pwd.manager.hibernate.model.Database;
-
 import javax.swing.event.ListSelectionEvent;
 
 
@@ -107,16 +103,8 @@ public class DBSettings {
 						.getPassword());
 				DBusername = DBUsername.getText();
 				DBUrl = DBurl.getText();
-				Database db = new Database(DBusername, password, DBUrl); 
-				try {
-					db.setDBProperties();
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			//	Database db = new Database(DBusername, password, DBUrl); 
+			
 				frame.dispose();  
 			}
 		}); 

@@ -35,11 +35,11 @@ public class Main {
 				//model.hashSHA(AESKey);
 		
 		System.out.println(AESKey);
-		String SHA256Pass = Model.toHexString(byteKey); 
+		//String SHA256Pass = Model.toHexString(byteKey); 
 		
-		String encPwd = Encryption.AESencryption(SHA256Pass , "vasile1231993");  
+	//	String encPwd = Encryption.AESencryption(SHA256Pass , "vasile1231993");  
 		
-		System.out.println("hashed with SHA256 : " + SHA256Pass);
+	//	System.out.println("hashed with SHA256 : " + SHA256Pass);
 		
 		String dbCommand = "create"; 
 		ServiceRegistry serviceRegistry = null;
