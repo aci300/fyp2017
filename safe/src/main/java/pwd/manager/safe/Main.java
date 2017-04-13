@@ -44,7 +44,7 @@ public class Main {
 		String dbCommand = "create"; 
 		ServiceRegistry serviceRegistry = null;
 		
-		serviceRegistry= model.getServiceRegistry(dbCommand); 
+		//serviceRegistry= model.getServiceRegistry(dbCommand); 
 	
 		String passDB = null;
 		

@@ -1,48 +1,50 @@
+
 package pwd.manager.GUI;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
-import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
-import java.io.File;
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import javax.swing.DefaultListModel;
-import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionListener;
 
+import pwd.manager.hibernate.model.Database;
 import pwd.manager.safe.UserLogin;
 
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.JComboBox;
+//import javax.swing.JComboBox;
 
 public class Login {
 
-	private UserLogin user = new UserLogin(); 
+	private UserLogin user = new UserLogin();
+	private Database db = null;
 	private JFrame frame;
-	private String usrlogin; 
+	private String usrlogin;
 	public String username;
-	public  String password;
+	public String password;
 	private JPasswordField passwordField;
+	private JPasswordField passwordField2;
 	private JList<String> accountsList;
 	private JTextArea textBox = new JTextArea();
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_1;
-	private String usrpwd = null; 
+	private String usrpwd = null;
+	public String DBpassword;
+	public String DBusername;
+	public String DBUrl;
 
-	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -55,28 +57,34 @@ public class Login {
 			}
 		});
 	}
-	
+
 	public Login() {
 		initialize();
 	}
-	
+
 	private void initialize() {
-		
+
 		final JTextField txtUsername = new JTextField();
 		final JTextField txtDescription = new JTextField();
 		final JTextField txtHint = new JTextField();
 
 		final JButton sign_in = new JButton("Sign in");
+		final JButton dbSettings = new JButton("DB Settings");
 		final JButton new_user = new JButton("New User");
 		final JButton create_user = new JButton("Create User");
 		final JButton new_acc = new JButton("New account");
 		final JButton user_set = new JButton("Settings");
 		final JButton change_p = new JButton("Change");
-		final JButton show_acc = new JButton("Show");
 		final JButton create_acc = new JButton("Create");
 		final JButton get_accounts = new JButton("Get Accounts");
 
 		final JButton btnSignOut = new JButton("Sign out");
+
+		final JTextField DBUsername = new JTextField();
+		final JTextField DBurl = new JTextField();
+
+		final JButton apply = new JButton("Apply");
+		final JButton close = new JButton("Close");
 
 		frame = new JFrame("Password Manager");
 		frame.setBounds(100, 100, 945, 521);
@@ -89,23 +97,22 @@ public class Login {
 		accountsList = new JList<String>();
 		scrollPane.setViewportView(accountsList);
 		accountsList.addListSelectionListener(new ListSelectionListener() {
+
 			public void valueChanged(ListSelectionEvent arg0) {
-				if (accountsList.getSelectedIndex() >= 0){
-					textBox.setText( user.displayDecryptedPassbyIndex(accountsList
-							.getSelectedIndex()));
-				//System.out.println(accountsList.getSelectedIndex());
+				if (accountsList.getSelectedIndex() >= 0) {
+					textBox.setText(user.displayDecryptedPassbyIndex(accountsList.getSelectedIndex()));
 				}
 			}
 		});
-		
+
 		scrollPane.setVisible(false);
 
-		
 		scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(340, 107, 420, 150);
 		frame.getContentPane().add(scrollPane_1);
 
-		textBox.setText("You are NOT connected to your account. \r\nPlease insert your username and password and press Sign in");
+		textBox.setText(
+				"You are NOT connected to your account. \r\nPlease insert your username and password and press Sign in");
 		textBox.setWrapStyleWord(true);
 		scrollPane_1.setViewportView(textBox);
 
@@ -113,15 +120,15 @@ public class Login {
 		txtUsername.setBounds(31, 31, 265, 22);
 		frame.getContentPane().add(txtUsername);
 		txtUsername.setColumns(20);
-		
+
 		passwordField = new JPasswordField();
 		passwordField.setBounds(340, 31, 254, 22);
 		frame.getContentPane().add(passwordField);
-		
+
 		/**
 		 * The mouseListener for the Sign in button , when the button is clicked
-		 * will establish the connection to the DB and will set the
-		 * JFrane accordingly for the next stage
+		 * will establish the connection to the DB and will set the JFrane
+		 * accordingly for the next stage
 		 */
 		sign_in.addMouseListener(new MouseAdapter() {
 			@Override
@@ -129,13 +136,11 @@ public class Login {
 
 				try {
 
-					
-					password = new String(((JPasswordField) passwordField)
-							.getPassword());
+					password = new String(((JPasswordField) passwordField).getPassword());
 					username = txtUsername.getText();
 					user.login(username, password);
-					usrpwd = password; 
-					usrlogin = username; 
+					usrpwd = password;
+					usrlogin = username;
 					btnSignOut.setVisible(true);
 					scrollPane.setVisible(true);
 					sign_in.setVisible(false);
@@ -145,12 +150,13 @@ public class Login {
 					new_user.setVisible(false);
 					new_acc.setVisible(true);
 					get_accounts.setVisible(true);
+					dbSettings.setVisible(false);
 
 					accountsList.setModel(new DefaultListModel<String>());
 					textBox.setText("You are connected to your account. \nPlease choose one option!");
 				} catch (IllegalArgumentException e) {
 					String message = e.getMessage();
-					
+
 					scrollPane.setVisible(false);
 					textBox.setText(message);
 
@@ -166,11 +172,11 @@ public class Login {
 		});
 		sign_in.setBounds(663, 31, 97, 22);
 		frame.getContentPane().add(sign_in);
-		
+
 		/**
 		 * The mouseListener for the Sign in button , when the button is clicked
-		 * will establish the connection to the DB and will set the
-		 * JFrane accordingly for the next stage
+		 * will establish the connection to the DB and will set the JFrane
+		 * accordingly for the next stage
 		 */
 		new_user.addMouseListener(new MouseAdapter() {
 			@Override
@@ -183,30 +189,28 @@ public class Login {
 					new_user.setVisible(false);
 					sign_in.setVisible(false);
 					create_user.setVisible(true);
-					
+					dbSettings.setVisible(false);
 
 				} catch (IllegalArgumentException e) {
 					scrollPane.setVisible(false);
 					textBox.setText("Invalid or missing credentials!!! ");
 
-				} 
-				
+				}
 
 			}
 		});
-		
+
 		new_user.setBounds(800, 31, 97, 22);
 		frame.getContentPane().add(new_user);
-		
+
 		create_user.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 
 				try {
-					
-					//txtUsername.setColumns(20);
-					password = new String(((JPasswordField) passwordField)
-							.getPassword());
+
+					// txtUsername.setColumns(20);
+					password = new String(((JPasswordField) passwordField).getPassword());
 					username = txtUsername.getText();
 					user.createUser(username, password);
 					create_user.setVisible(false);
@@ -216,9 +220,11 @@ public class Login {
 					txtUsername.setBounds(31, 31, 265, 22);
 					frame.getContentPane().add(txtUsername);
 					create_user.setVisible(false);
-					/*passwordField = new JPasswordField();
-					passwordField.setBounds(340, 31, 254, 22);
-					frame.getContentPane().add(passwordField);*/
+					/*
+					 * passwordField = new JPasswordField();
+					 * passwordField.setBounds(340, 31, 254, 22);
+					 * frame.getContentPane().add(passwordField);
+					 */
 				} catch (IllegalArgumentException e) {
 					scrollPane.setVisible(false);
 					textBox.setText("Invalid or missing credentials!!! ");
@@ -236,21 +242,19 @@ public class Login {
 		create_user.setBounds(700, 31, 117, 22);
 		create_user.setVisible(false);
 		frame.getContentPane().add(create_user);
-		
-		
-		
+
 		txtDescription.setText("Description");
 		txtDescription.setBounds(31, 60, 265, 22);
 		txtDescription.setVisible(false);
 		frame.getContentPane().add(txtDescription);
-		txtDescription.setColumns(50);   
-		
+		txtDescription.setColumns(50);
+
 		txtHint.setText("Hint");
 		txtHint.setBounds(340, 60, 254, 22);
 		txtHint.setVisible(false);
 		frame.getContentPane().add(txtHint);
 		txtHint.setColumns(20);
-		
+
 		new_acc.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -267,34 +271,27 @@ public class Login {
 					get_accounts.setVisible(false);
 					create_acc.setVisible(true);
 					new_acc.setVisible(false);
-
-					
+					dbSettings.setVisible(false);
 
 				} catch (IllegalArgumentException e) {
 					scrollPane.setVisible(false);
 					textBox.setText("Invalid or missing credentials!!! ");
 
-				} 
-				
+				}
 
 			}
 		});
-		
+
 		new_acc.setBounds(663, 31, 127, 22);
 		new_acc.setVisible(false);
 		frame.getContentPane().add(new_acc);
-		
-		
-		
-		
-		
+
 		create_acc.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 
 				try {
-					password = new String(((JPasswordField) passwordField)
-							.getPassword());
+					password = new String(((JPasswordField) passwordField).getPassword());
 					username = txtUsername.getText();
 					String desc = txtDescription.getText();
 					String hint = txtHint.getText();
@@ -308,8 +305,6 @@ public class Login {
 					create_acc.setVisible(false);
 					new_acc.setVisible(true);
 
-					
-
 				} catch (IllegalArgumentException e) {
 					scrollPane.setVisible(false);
 					textBox.setText("Invalid or missing credentials!!! ");
@@ -317,48 +312,103 @@ public class Login {
 				} catch (NoSuchAlgorithmException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} 
-				
+				}
 
 			}
 		});
 		create_acc.setBounds(663, 31, 97, 22);
 		create_acc.setVisible(false);
 		frame.getContentPane().add(create_acc);
-		
-		
+
 		get_accounts.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				try {
-					/*String password = new String(
-							((JPasswordField) passwordField).getPassword());
-					*/// DefaultListModel<String> dlm = new
+					/*
+					 * String password = new String( ((JPasswordField)
+					 * passwordField).getPassword());
+					 */
+					// DefaultListModel<String> dlm = new
 					// DefaultListModel<String>();
-					
-				
+
 					textBox.setText("Select one account to get the content");
 					accountsList.setListData(user.getAccounts(usrlogin));
-					
-				}catch (IllegalArgumentException e) {
+
+				} catch (IllegalArgumentException e) {
 					scrollPane.setVisible(false);
 					textBox.setText("Invalid or missing credentials!!! ");
 
-				} 
+				}
 			}
 		});
 		get_accounts.setBounds(12, 90, 124, 25);
 		get_accounts.setVisible(false);
 		frame.getContentPane().add(get_accounts);
-		
-		
-		
+
+		DBUsername.setText("Database Username");
+		DBUsername.setBounds(30, 120, 250, 22);
+		frame.getContentPane().add(DBUsername);
+		DBUsername.setColumns(20);
+
+		DBurl.setText("Database URL - PostgreSql/MySQL");
+		DBurl.setBounds(30, 90, 250, 22);
+		frame.getContentPane().add(DBurl);
+		DBurl.setColumns(40);
+
+		passwordField2 = new JPasswordField();
+		passwordField2.setText("Password");
+		passwordField2.setBounds(30, 150, 250, 22);
+		frame.getContentPane().add(passwordField2);
+		passwordField2.setVisible(false);
+		DBUsername.setVisible(false);
+		DBurl.setVisible(false);
+		apply.setVisible(false);
+
+		dbSettings.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+
+				passwordField2.setVisible(true);
+				DBUsername.setVisible(true);
+				DBurl.setVisible(true);
+				apply.setVisible(true);
+				dbSettings.setVisible(false);
+
+			}
+		});
+
+		apply.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+
+				DBpassword = new String(((JPasswordField) passwordField2).getPassword());
+				DBusername = DBUsername.getText();
+				DBUrl = DBurl.getText();
+				user.setDBSettings(DBusername, DBpassword, DBUrl);
+				// user = new UserLogin(db);
+				textBox.setText(
+						"The Database Settings have been updated. \r\n You are NOT connected to your account. \n Please sign in or create a new user!");
+
+				passwordField2.setVisible(false);
+				DBUsername.setVisible(false);
+				DBurl.setVisible(false);
+				apply.setVisible(false);
+				dbSettings.setVisible(true);
+				// frame.dispose();
+			}
+		});
+		apply.setBounds(60, 200, 70, 20);
+		frame.getContentPane().add(apply);
+
+		dbSettings.setBounds(60, 200, 100, 20);
+		frame.getContentPane().add(dbSettings);
+		// dbSettings.setVisible(true);
+
 		btnSignOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-					
-					
+
 				} catch (Exception e1) {
 					textBox.setText("You were not signed in   !!!!");
 				}

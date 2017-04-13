@@ -32,9 +32,7 @@ public class Decryption {
 	//byte[] enc = 	hexStringToByteArray(encrypted);
 		
 		  byte[] key=   hexStringToByteArray(password);
-   	 //  String s=   byteArrayToHexString(key); 
-   	 //  System.out.println("Decryption pwd: " + s);
-   	   SecretKeySpec aesKey = new SecretKeySpec(key, "AES");
+    	   SecretKeySpec aesKey = new SecretKeySpec(key, "AES");
 	        Cipher c = null;
 			try {
 				c = Cipher.getInstance("AES");
@@ -49,11 +47,8 @@ public class Decryption {
 	        byte[] enc = toByteArray(encrypted);
 	        byte[] cipherText = c.doFinal(enc);
 			   
-			   // Ciphertext as hex.
-			// String   decryptedValue = byteArrayToHexString(cipherText);
-			 //  System.out.println("Cipher text: "+decryptedValue);
-			   
-			   String originalString = new String(cipherText);
+		   
+			String originalString = new String(cipherText);
 			 //   System.out.println("Original string: " + originalString);
 
 	        return originalString;

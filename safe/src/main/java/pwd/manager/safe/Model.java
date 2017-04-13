@@ -37,6 +37,10 @@ public class Model {
 
 	private String username;
     private String password; 
+	private String url;
+	private String driver;
+	private String dialect;
+
     private String title;
     private String description; 
     private static String salt = "salt"; 
@@ -86,37 +90,49 @@ public class Model {
     	return password;
     }
     
-    /**
-     * @return username for database
-     */
-    public String getTitle(){
-    	return title;
-    }
-    
-    /**
-     * @return password for database
-     */
-    public String getDescription(){
-    	return description;
-    }
-    
+
  
-	public ServiceRegistry  getServiceRegistry(String command){
+	public ServiceRegistry  getServiceRegistry(String userName , String password, String url,  String command){
 		
-	    ServiceRegistry serviceRegistry= null; 
-	
-		try {
-			// ensure the driver has been loaded.
-			Class.forName("org.postgresql.Driver");
-		} catch(ClassNotFoundException e) {
-			System.err.println("driver not found.");
-			System.err.println(e.getMessage());
-			
+		ServiceRegistry serviceRegistry = null;
+
+		if (url.contains("mysql")) {
+			driver = "com.mysql.cj.jdbc.Driver";
+			dialect = " org.hibernate.dialect.MySQLDialect";
+		} else {
+			driver = "org.postgresql.Driver";
+			dialect = "org.hibernate.dialect.PostgreSQLDialect";
 		}
-		
+
+		if (driver.contains("mysql")) {
+			try {
+				// ensure the driver has been loaded.
+				Class.forName("com.mysql.cj.jdbc.Driver");
+			} catch (ClassNotFoundException e) {
+				System.err.println("MySQL driver not found.");
+				System.err.println(e.getMessage());
+
+			}
+		}
+
+		else {
+			try {
+				// ensure the driver has been loaded.
+				Class.forName("org.postgresql.Driver");
+			} catch (ClassNotFoundException e) {
+				System.err.println("PostgresSQL driver not found.");
+				System.err.println(e.getMessage());
+
+			}
+		}
 		
 		// Creating the database tables
 		StandardServiceRegistryBuilder ssr = new StandardServiceRegistryBuilder().configure();
+		ssr.applySetting("hibernate.connection.user", userName);
+		ssr.applySetting("hibernate.connection.password", password);
+		ssr.applySetting("hibernate.connection.url", url);
+		ssr.applySetting("hibernate.connection.driver.class", driver);
+		ssr.applySetting("hibernate.connection.dialect", dialect);
 		ssr = ssr.applySetting("hibernate.hbm2ddl.auto", command);
 		// System.out.println(ssr.getSettings());
 		
