@@ -73,7 +73,7 @@ public class Login {
 		final JTextField DBUsername = new JTextField();
 		final JTextField DBurl = new JTextField();
 		final JButton apply = new JButton("Apply");
-	
+
 		frame = new JFrame("Password Manager");
 		frame.setBounds(100, 100, 945, 521);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -123,7 +123,6 @@ public class Login {
 			public void mouseClicked(MouseEvent arg0) {
 
 				try {
-
 					password = new String(((JPasswordField) passwordField).getPassword());
 					username = txtUsername.getText();
 					user.login(username, password);
@@ -142,7 +141,6 @@ public class Login {
 					DBurl.setVisible(false);
 					apply.setVisible(false);
 					dbSettings.setVisible(false);
-
 					accountsList.setModel(new DefaultListModel<String>());
 					textBox.setText("You are connected. \nPlease choose one option!");
 				} catch (IllegalArgumentException e) {
@@ -197,13 +195,11 @@ public class Login {
 		create_user.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-
 				try {
-
-					// txtUsername.setColumns(20);
 					password = new String(((JPasswordField) passwordField).getPassword());
 					username = txtUsername.getText();
 					user.createUser(username, password);
+					textBox.setText("The new user has been added! \nPlease sign in or create a new user! ");
 					create_user.setVisible(false);
 					new_user.setVisible(true);
 					sign_in.setVisible(true);
@@ -211,11 +207,6 @@ public class Login {
 					passwordField.setText("Password");
 					frame.getContentPane().add(txtUsername);
 					create_user.setVisible(false);
-					/*
-					 * passwordField = new JPasswordField();
-					 * passwordField.setBounds(340, 31, 254, 22);
-					 * frame.getContentPane().add(passwordField);
-					 */
 				} catch (IllegalArgumentException e) {
 					scrollPane.setVisible(false);
 					textBox.setText("Invalid or missing credentials!!! ");
@@ -265,7 +256,6 @@ public class Login {
 					passwordField.setText("Password");
 					textBox.setText("Add the details for the new accout");
 
-
 				} catch (IllegalArgumentException e) {
 					scrollPane.setVisible(false);
 					textBox.setText("Invalid or missing credentials!!! ");
@@ -299,7 +289,6 @@ public class Login {
 					new_acc.setVisible(true);
 					textBox.setText("The new account has been added. Refresh the list! ");
 
-
 				} catch (IllegalArgumentException e) {
 					txtUsername.setText("New Account");
 					passwordField.setText("Password");
@@ -323,13 +312,7 @@ public class Login {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				try {
-					/*
-					 * String password = new String( ((JPasswordField)
-					 * passwordField).getPassword());
-					 */
-					// DefaultListModel<String> dlm = new
-					// DefaultListModel<String>();
-				
+
 					scrollPane.setVisible(true);
 					accountsList.setVisible(true);
 					textBox.setText("Select one account to get the content");
@@ -352,7 +335,7 @@ public class Login {
 
 		DBurl.setBounds(30, 90, 250, 22);
 		frame.getContentPane().add(DBurl);
-		DBurl.setColumns(40);
+		DBurl.setColumns(200);
 
 		passwordField2 = new JPasswordField();
 		passwordField2.setBounds(30, 150, 250, 22);
@@ -375,8 +358,6 @@ public class Login {
 				DBurl.setText("Database URL - PostgreSql/MySQL");
 				passwordField2.setText("Password");
 
-
-
 			}
 		});
 
@@ -390,7 +371,7 @@ public class Login {
 				user.setDBSettings(DBusername, DBpassword, DBUrl);
 				// user = new UserLogin(db);
 				textBox.setText(
-						"The Database Settings have been updated. \r\n You are NOT connected. \n Please sign in or create a new user!");
+						"The Database Settings have been updated.\r\nYou are NOT connected.\nPlease sign in or create a new user!");
 
 				passwordField2.setVisible(false);
 				DBUsername.setVisible(false);
@@ -415,7 +396,7 @@ public class Login {
 					btnSignOut.setVisible(false);
 					scrollPane.setVisible(false);
 					sign_in.setVisible(true);
-					//btnSignOut.setVisible(true);
+					// btnSignOut.setVisible(true);
 					passwordField.setVisible(true);
 					txtUsername.setVisible(true);
 					new_user.setVisible(true);
@@ -424,9 +405,9 @@ public class Login {
 					dbSettings.setVisible(true);
 					txtUsername.setText("Username");
 					passwordField.setText("Password");
-					textBox.setText("Successfully signed out. \n Sign in or create a new user  ");
+					textBox.setText("Successfully signed out. \nSign in or create a new user  ");
 				} catch (Exception e1) {
-					textBox.setText("You were not signed in   !!!!");
+					textBox.setText("You were not signed in !!!!");
 				}
 			}
 		});

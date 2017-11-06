@@ -21,7 +21,6 @@ pwd\manager\hibernate\model\impl\Querries.class
 pwd\manager\safe\Main.class
 pwd\manager\safe\Model.class
 pwd\manager\hibernate\model\Account.class
-pwd\manager\hibernate\model\Database.class
 pwd\manager\hibernate\model\impl\HibernateServiceImpl.class
 pwd\manager\hibernate\model\QuerriesService.class
 pwd\manager\GUI\Login$3.class

@@ -19,6 +19,7 @@ public class UserLogin {
 	private String userName = "postgres"; 
 	private String password = "banokipo"; 
 	private String url = "jdbc:postgresql://localhost:5432/PwdManager"; 
+//	private String url = "jdbc:mysql://db4free.net:3306/pwdmanager?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Europe/Paris"; 
 	private ServiceRegistry serviceRegistry = null;
 	private String currPass = null;
 	private String currUser = null;

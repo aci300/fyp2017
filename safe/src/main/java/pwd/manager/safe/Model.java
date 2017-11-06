@@ -73,8 +73,8 @@ public class Model {
 		ServiceRegistry serviceRegistry = null;
 
 		if (url.contains("mysql")) {
-			driver = "com.mysql.cj.jdbc.Driver";
-			dialect = " org.hibernate.dialect.MySQLDialect";
+			driver = "com.mysql.jdbc.Driver";
+			dialect = "org.hibernate.dialect.MySQLDialect";
 		} else {
 			driver = "org.postgresql.Driver";
 			dialect = "org.hibernate.dialect.PostgreSQLDialect";
